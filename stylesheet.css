@@ -76,10 +76,12 @@
     margin: 3px 0;
 }
 
-/* Keyboard focus, as a ring. The button is drawn at icon.maxSize and scaled down, so the border shrinks
- * with it. Corner radii come from Layout.radii(), set in code. */
-.tahoe-item:focus {
-    border: 3px solid rgba(255, 255, 255, 0.85);
+/* Keyboard focus: a ring just outside the icon in the focus color, as
+ * macOS draws it; its own actor, so the icon keeps its size. The button is
+ * drawn at icon.maxSize and scaled down, so the ring scales with it. Corner
+ * radii come from Layout.radii(), set in code. */
+.tahoe-focus-ring {
+    border: 3px solid rgba(10, 132, 255, 0.9);
 }
 
 .tahoe-separator {
