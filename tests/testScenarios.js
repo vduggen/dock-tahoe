@@ -80,23 +80,33 @@ var tests = {
         });
     },
 
-    "pointer sweep: integrity, hovered icon under pointer, no jumps"(assert) {
+    // Near an icon's edge the pointer may land in the gap beside it: the dock
+    // grows in proportion to the pointer, so its ends do not sway back and
+    // forth at each icon, only turn as it grows and as it shrinks.
+    "pointer sweep: integrity, hovered icon under pointer, no jumps, no sway"(assert) {
         const rest = Layout.computeRest(SEVEN, tokens, MONITOR, "bottom");
         let previous = null;
+        let direction = 0;
+        let turns = 0;
         for (let pointer = rest.start; pointer <= rest.start + rest.length; pointer++) {
             const placed = frame(rest, pointer);
             checkIntegrity(assert, placed, "pointer " + pointer);
             const restIndex = rest.centers.findIndex(center =>
-                pointer >= center - rest.iconSize / 2 && pointer < center + rest.iconSize / 2);
+                pointer >= center - rest.iconSize / 4 && pointer < center + rest.iconSize / 4);
             if (restIndex >= 0)
                 assert.equal(under(placed, pointer), restIndex, "under pointer " + pointer);
             if (previous) {
+                const step = Math.sign(Math.round((placed.dock.x - previous.dock.x) * 1e6));
+                if (step && direction && step !== direction)
+                    turns++;
+                direction = step || direction;
                 placed.items.forEach((item, index) =>
                     assert.ok(Math.abs(item.rect.x - previous.items[index].rect.x) < 2,
                         "jump at pointer " + pointer + " item " + index));
             }
             previous = placed;
         }
+        assert.ok(turns <= 2, "dock swayed " + turns + " times");
     },
 
     "edge-clamped dock stays on screen"(assert) {
