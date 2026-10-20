@@ -9,5 +9,10 @@
       "chrome-lcmninomimaabkahifgablgmjeldgkhm-Profile_3.desktop",
       "chrome-pommaclcbfghclhalboakcipcmmndhcj-Profile_3.desktop"
     ]
+  },
+  "focus-hotkey": {
+    "type": "keybinding",
+    "description": "Focar o Dock pelo teclado",
+    "default": "<Super><Alt>d"
   }
 }

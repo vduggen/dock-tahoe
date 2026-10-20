@@ -11,6 +11,7 @@ const { DockView } = require("./lib/dockView.js");
 const Grouping = require("./lib/grouping.js");
 
 const PANEL_KEYS = ["panels-enabled", "panels-height", "panels-autohide"];
+const HOTKEY_NAME = "tahoe-dock-focus";
 
 let _metadata = null;
 let _controller = null;
@@ -21,7 +22,10 @@ class DockController {
         this._signals = [];
         this._snapshot = { items: [] };
         this._rebuildId = 0;
-        this.settings = new DockSettings(metadata.uuid, () => this.tracker.reloadPinned());
+        this.settings = new DockSettings(metadata.uuid, {
+            pinnedApps: () => this.tracker.reloadPinned(),
+            focusHotkey: () => this._bindHotkey()
+        });
         this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
             this._snapshot = snapshot;
             this._updateViews();
@@ -36,6 +40,7 @@ class DockController {
             this._connect(global.settings, "changed::" + key, () => this._queueRebuild()));
         this._rebuildViews();
         this.tracker.enable();
+        this._bindHotkey();
     }
 
     disable() {
@@ -43,6 +48,7 @@ class DockController {
             GLib.source_remove(this._rebuildId);
             this._rebuildId = 0;
         }
+        Main.keybindingManager.removeHotKey(HOTKEY_NAME);
         this.tracker.disable();
         this._signals.forEach(([object, id]) => object.disconnect(id));
         this._signals = [];
@@ -53,6 +59,16 @@ class DockController {
 
     _connect(object, signal, callback) {
         this._signals.push([object, object.connect(signal, callback)]);
+    }
+
+    _bindHotkey() {
+        Main.keybindingManager.removeHotKey(HOTKEY_NAME);
+        Main.keybindingManager.addHotKey(HOTKEY_NAME, this.settings.focusHotkey, () => {
+            const index = global.display.get_current_monitor();
+            const view = this.views.find(candidate => candidate.monitor.index === index) || this.views[0];
+            if (view)
+                view.beginKeyboard();
+        });
     }
 
     // Panels resize after their settings change; wait for that to settle.
