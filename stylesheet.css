@@ -43,3 +43,15 @@
 .tahoe-separator {
     background-color: rgba(255, 255, 255, 0.45);
 }
+
+/* Count badge (lib/badges.js); size comes from the icon size in code. */
+.tahoe-badge {
+    background-color: rgb(255, 59, 48);
+    color: #ffffff;
+    font-weight: bold;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.tahoe-badge-label {
+    text-align: center;
+}

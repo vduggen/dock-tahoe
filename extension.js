@@ -8,6 +8,7 @@ const { PanelLoc } = imports.ui.panel;
 const { AppTracker } = require("./lib/appTracker.js");
 const { DockSettings } = require("./lib/settings.js");
 const { DockView } = require("./lib/dockView.js");
+const { LauncherEntry } = require("./lib/launcherEntry.js");
 const Grouping = require("./lib/grouping.js");
 const Layout = require("./lib/layout.js");
 
@@ -34,6 +35,7 @@ class DockController {
             this._snapshot = snapshot;
             this._updateViews();
         });
+        this.badges = new LauncherEntry(() => this._updateViews());
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
     }
 
@@ -44,6 +46,7 @@ class DockController {
             this._connect(global.settings, "changed::" + key, () => this._queueRebuild()));
         this._rebuildViews();
         this.tracker.enable();
+        this.badges.enable();
         this._bindHotkey();
     }
 
@@ -54,6 +57,7 @@ class DockController {
         }
         Main.keybindingManager.removeHotKey(HOTKEY_NAME);
         this.tracker.disable();
+        this.badges.disable();
         this._signals.forEach(([object, id]) => object.disconnect(id));
         this._signals = [];
         this.views.forEach(view => view.destroy());
@@ -191,7 +195,10 @@ class DockController {
                 const visible = item.pinned || facts.hasWindows ||
                     (item.windows.length === 0 && item.running && index === primary);
                 if (visible)
-                    entries.push(Object.assign({}, item, { facts: facts }));
+                    entries.push(Object.assign({}, item, {
+                        facts: facts,
+                        badge: this.badges.label(item.desktopId)
+                    }));
             });
             view.update(entries);
         });
