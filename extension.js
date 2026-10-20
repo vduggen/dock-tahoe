@@ -9,6 +9,7 @@ const { AppTracker } = require("./lib/appTracker.js");
 const { DockSettings } = require("./lib/settings.js");
 const { DockView } = require("./lib/dockView.js");
 const Grouping = require("./lib/grouping.js");
+const Layout = require("./lib/layout.js");
 
 const PANEL_KEYS = ["panels-enabled", "panels-height", "panels-autohide"];
 const HOTKEY_NAME = "tahoe-dock-focus";
@@ -24,6 +25,7 @@ class DockController {
         this._rebuildId = 0;
         this.settings = new DockSettings(metadata.uuid, {
             pinnedApps: () => this.tracker.reloadPinned(),
+            position: () => this._rebuildViews(),
             focusHotkey: () => this._bindHotkey()
         });
         this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
@@ -85,7 +87,9 @@ class DockController {
     _rebuildViews() {
         this.views.forEach(view => view.destroy());
         const scale = this._themeContext.scale_factor;
-        const position = "bottom";
+        const position = Layout.POSITIONS.indexOf(this.settings.position) >= 0
+            ? this.settings.position
+            : "bottom";
         this.views = Main.layoutManager.monitors.map(monitor =>
             new DockView(monitor, position, scale, this._panelInset(monitor.index, position), this));
         this._updateViews();

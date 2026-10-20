@@ -10,6 +10,16 @@
       "chrome-pommaclcbfghclhalboakcipcmmndhcj-Profile_3.desktop"
     ]
   },
+  "position": {
+    "type": "combobox",
+    "description": "Posição na tela",
+    "default": "bottom",
+    "options": {
+      "Inferior": "bottom",
+      "Esquerda": "left",
+      "Direita": "right"
+    }
+  },
   "focus-hotkey": {
     "type": "keybinding",
     "description": "Focar o Dock pelo teclado",
