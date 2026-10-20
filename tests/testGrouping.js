@@ -11,7 +11,7 @@ let nextId = 1;
 function win(props) {
     const id = nextId++;
     return Object.assign({
-        id: id, appId: "", wmClasses: [], sequence: id, monitor: 0, workspace: 0,
+        id: id, appId: "", wmClasses: [], sequence: id, monitor: 0, workspace: 0, allWorkspaces: false,
         minimized: false, focused: false, attention: false, skipTaskbar: false
     }, props);
 }
@@ -81,5 +81,21 @@ var tests = {
             "PINNED|RUNNING|MINIMIZED|ATTENTION", "monitor 0");
         assert.equal(State.describe(State.fromFacts(Grouping.facts(items[0], 1)), AppFlag),
             "PINNED|RUNNING|FOCUSED", "monitor 1");
+    },
+
+    "a workspace sees its own and sticky windows"(assert) {
+        const items = Grouping.group(PINNED, [
+            win({ appId: "nemo.desktop", workspace: 0, focused: true }),
+            win({ appId: "nemo.desktop", workspace: 1 }),
+            win({ wmClasses: ["Sticky"], workspace: -1, allWorkspaces: true })
+        ]);
+        const nemo = items[0];
+        assert.equal(Grouping.onWorkspace(nemo, 0).windows.length, 1);
+        assert.ok(Grouping.facts(Grouping.onWorkspace(nemo, 0)).focused, "focused on 0");
+        const away = Grouping.facts(Grouping.onWorkspace(nemo, 2));
+        assert.ok(away.running && !away.hasWindows, "no window on 2, still running");
+        assert.equal(nemo.windows.length, 2, "original untouched");
+        const sticky = items[items.length - 1];
+        assert.equal(Grouping.onWorkspace(sticky, 3).windows.length, 1, "sticky everywhere");
     }
 };

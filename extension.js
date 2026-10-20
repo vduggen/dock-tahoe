@@ -29,7 +29,8 @@ class DockController {
             position: () => this._rebuildViews(),
             focusHotkey: () => this._bindHotkey(),
             autohide: () => this._rebuildViews(),
-            appearance: () => this._rebuildViews()
+            appearance: () => this._rebuildViews(),
+            workspaces: () => this._updateViews()
         });
         this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
             this._snapshot = snapshot;
@@ -174,7 +175,11 @@ class DockController {
 
     _launch(entry) {
         try {
-            if (entry.app)
+            // Windows on other workspaces only (current-workspace-only):
+            // a new window here, instead of activate() switching away.
+            if (entry.app && entry.app.get_windows().length)
+                entry.app.open_new_window(-1);
+            else if (entry.app)
                 entry.app.activate();
             else if (entry.info)
                 entry.info.launch([], global.create_app_launch_context());
@@ -185,15 +190,19 @@ class DockController {
 
     // Each monitor shows the pinned apps plus the unpinned apps with windows
     // on it; running apps without any window go to the primary monitor.
+    // With current-workspace-only, windows on other workspaces don't count,
+    // for the dots, clicks and menus alike.
     _updateViews() {
         const primary = Main.layoutManager.primaryIndex;
+        const workspace = global.workspace_manager.get_active_workspace_index();
         this.views.forEach(view => {
             const index = view.monitor.index;
             const entries = [];
-            this._snapshot.items.forEach(item => {
+            this._snapshot.items.forEach(all => {
+                const item = this.settings.currentWorkspaceOnly ? Grouping.onWorkspace(all, workspace) : all;
                 const facts = Grouping.facts(item, index);
                 const visible = item.pinned || facts.hasWindows ||
-                    (item.windows.length === 0 && item.running && index === primary);
+                    (all.windows.length === 0 && item.running && index === primary);
                 if (visible)
                     entries.push(Object.assign({}, item, {
                         facts: facts,

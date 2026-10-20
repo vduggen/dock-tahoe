@@ -49,6 +49,12 @@
     "description": "Ocultar automaticamente",
     "default": false
   },
+  "current-workspace-only": {
+    "type": "switch",
+    "description": "Mostrar apenas apps da área de trabalho atual",
+    "tooltip": "Desligado, como no macOS, o Dock mostra os apps de todas as áreas de trabalho.",
+    "default": false
+  },
   "focus-hotkey": {
     "type": "keybinding",
     "description": "Focar o Dock pelo teclado",
