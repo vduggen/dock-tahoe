@@ -386,6 +386,10 @@ class DockController {
             const shown = this.settings.currentWorkspaceOnly ? Grouping.onWorkspace(trash, workspace) : trash;
             entries.push(Object.assign(this.trash.entry(shown.windows, Grouping.facts(shown, index)),
                 { localWindows: Grouping.onMonitor(shown, index) }));
+            // The permanent file manager leads the dock, as Finder does.
+            const first = entries.findIndex(entry => entry.permanent);
+            if (first > 0)
+                entries.unshift(entries.splice(first, 1)[0]);
             view.update(entries);
         });
     }
