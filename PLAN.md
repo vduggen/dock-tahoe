@@ -111,14 +111,20 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   `skip_taskbar`. Sem polling.
 - Fixados lidos de `settings-schema.json` (lista de `desktopId`).
 
-### Etapa 3 — P0: view e interações básicas
+### Etapa 3 — P0: view e interações básicas ✅
 
 - `dockView.js`: um ator por item, **atualizado por chave** em vez de
   reconstruir tudo; indicadores no centro visual do ícone.
-- Clique (abrir/ativar/ciclar janelas), menu contextual com `PopupMenu`
-  (Abrir, Fixar/Desafixar, Fechar janelas, Sair), tooltip.
-- Teclado: foco navegável, `Enter` ativa, nomes acessíveis.
-- Reserva de strut (do protótipo) e respeito a fullscreen.
+- Clique abre o app ou traz a janela usada por último, preferindo o monitor
+  do dock, conforme a §7. Em vez de ciclar janelas, o menu lista todas.
+- Menu contextual com `PopupMenu`: janelas, Abrir/Nova janela, Manter
+  no/Remover do Dock (persistido em `pinned-apps`), Fechar. Tooltip com o
+  nome no hover e no foco do teclado.
+- Teclado: `Super+Alt+D` (configurável) foca o dock do monitor atual sob grab
+  modal; setas, `Home`/`End`, `Enter`, `Menu`/`Shift+F10` e `Esc`.
+- Posição configurável: inferior, esquerda ou direita.
+- Reserva de strut; o dock flutua acima dos painéis fixos da mesma borda e
+  some apenas no monitor em tela cheia.
 
 ### Etapa 4 — P1: movimento
 
@@ -176,6 +182,19 @@ spec e precisam ser comparadas com gravações do Tahoe:
   pedido. O estado `ATTENTION` segue o que o Muffin decide.
 - `wmctrl -b add,hidden` não minimiza no Muffin; para testes manuais use
   `Meta.Window.minimize()` via `org.Cinnamon.Eval`.
+- `Meta.Window.unminimize()` não recebe timestamp no Muffin 6.6.
+
+## Notas da API do Cinnamon
+
+- `PopupMenu` com `St.Side.BOTTOM` encosta o menu na base da tela, como num
+  painel. O `DockMenu` reposiciona o menu além da cápsula.
+- `St.Widget` consome `Menu` e `Shift+F10` e emite `popup-menu`, então essas
+  teclas não chegam ao `key-press-event` do contêiner.
+- `navigate_focus` usa `Gtk.DirectionType`; `St.DirectionType` não existe.
+- `visibleInFullscreen: false` age por `Main.uiGroup.set_skip_paint`, não por
+  `visible`.
+- Edições externas no JSON de configurações só valem depois de
+  `org.Cinnamon.updateSetting(uuid, uuid, chave, valor)` no D-Bus.
 
 ## Riscos e decisões em aberto
 
