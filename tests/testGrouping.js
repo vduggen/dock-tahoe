@@ -106,6 +106,9 @@ var tests = {
             win({ appId: "nemo.desktop", monitor: 0, minimized: true, attention: true }),
             win({ appId: "nemo.desktop", monitor: 1, focused: true })
         ]);
+        assert.ok(Grouping.onMonitor(items[0], 1).every(window => window.focused), "one window each");
+        assert.equal(Grouping.onMonitor(items[0], 1).length, 1);
+        assert.equal(Grouping.onMonitor(items[0], 2).length, 0, "none elsewhere");
         const { AppFlag } = State;
         assert.equal(State.describe(State.fromFacts(Grouping.facts(items[0])), AppFlag),
             "PINNED|RUNNING|FOCUSED|MINIMIZED|ATTENTION");

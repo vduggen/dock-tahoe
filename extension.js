@@ -139,7 +139,7 @@ class DockController {
     // whose windows are all on other monitors opens a new one here (_launch).
     // Window-backed apps can't open windows, so they still switch.
     activate(entry, monitorIndex) {
-        const local = entry.windows.filter(window => window.monitor === monitorIndex);
+        const local = entry.localWindows;
         const candidates = (local.length || entry.desktopFileId ? local : entry.windows)
             .map(window => window.metaWindow)
             .filter(Boolean)
@@ -233,9 +233,10 @@ class DockController {
         this.tracker.reloadPinned();
     }
 
+    // This monitor's windows, the ones its menu lists.
     closeWindows(entry) {
         const time = global.get_current_time();
-        entry.windows.forEach(window => {
+        entry.localWindows.forEach(window => {
             if (window.metaWindow)
                 window.metaWindow.delete(time);
         });
@@ -354,12 +355,14 @@ class DockController {
                 if (visible)
                     entries.push(Object.assign({}, item, {
                         facts: facts,
+                        localWindows: Grouping.onMonitor(item, index),
                         badge: this.badges.label(item.desktopId)
                     }));
             });
             const trash = this._trashItem();
             const shown = this.settings.currentWorkspaceOnly ? Grouping.onWorkspace(trash, workspace) : trash;
-            entries.push(this.trash.entry(shown.windows, Grouping.facts(shown, index)));
+            entries.push(Object.assign(this.trash.entry(shown.windows, Grouping.facts(shown, index)),
+                { localWindows: Grouping.onMonitor(shown, index) }));
             view.update(entries);
         });
     }
