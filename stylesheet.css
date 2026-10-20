@@ -28,6 +28,7 @@
 /* Tooltip and menu bubbles (lib/bubble.js): the shape is painted in code
  * from these colors; the arrow's room is padding set in code. */
 .tahoe-tooltip,
+.tahoe-preview,
 .menu.tahoe-menu {
     -bubble-fill: rgba(36, 36, 40, 0.92);
     -bubble-border: rgba(255, 255, 255, 0.14);
@@ -95,4 +96,45 @@
 
 .tahoe-badge-label {
     text-align: center;
+}
+
+/* Window previews (lib/windowPreview.js): padding and spacing match
+   PREVIEW_PADDING and PREVIEW_SPACING, card padding CARD_PADDING. */
+.tahoe-preview {
+    padding: 8px;
+    spacing: 6px;
+}
+
+.tahoe-preview-card {
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.tahoe-preview-card:hover,
+.tahoe-preview-card:focus {
+    background-color: rgba(255, 255, 255, 0.10);
+}
+
+.tahoe-preview-header {
+    spacing: 6px;
+    padding-bottom: 6px;
+}
+
+.tahoe-preview-title {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 12px;
+}
+
+.tahoe-preview-close {
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.tahoe-preview-close:hover,
+.tahoe-preview-close:focus {
+    color: white;
+    background-color: rgb(255, 69, 58);
 }

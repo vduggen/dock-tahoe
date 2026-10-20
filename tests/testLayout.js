@@ -181,5 +181,29 @@ var tests = {
         assert.equal(shape([running, trash]), "i|i trash", "no pinned: no running line");
         assert.equal(shape([trash]), "i ", "trash alone");
         assert.equal(shape([pinned, running]), "i|i running", "no trash");
+    },
+
+    "thumbnails keep their aspect, centered and never enlarged"(assert) {
+        const wide = Layout.fitThumbnail(1920, 1080, 200, 125);
+        assert.equal(wide.width, 200);
+        assert.equal(wide.height, 113);
+        assert.equal(wide.x, 0);
+        assert.equal(wide.y, 6);
+        const tall = Layout.fitThumbnail(400, 800, 200, 125);
+        assert.equal(tall.height, 125, "tall fits the height");
+        assert.equal(tall.width, 63);
+        const small = Layout.fitThumbnail(100, 50, 200, 125);
+        assert.equal(small.width, 100, "small stays as is");
+        assert.equal(small.x, 50);
+    },
+
+    "preview boxes shrink alike to fit the row"(assert) {
+        const roomy = Layout.previewBox(3, 200, 125, 1800, 20, false);
+        assert.equal(roomy.width, 200, "fits as is");
+        const crowded = Layout.previewBox(10, 200, 125, 1800, 20, false);
+        assert.equal(crowded.width, 160);
+        assert.equal(crowded.height, 100);
+        const column = Layout.previewBox(10, 200, 125, 1000, 20, true);
+        assert.equal(column.height, 80, "vertical rows shrink by height");
     }
 };
