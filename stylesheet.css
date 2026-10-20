@@ -29,15 +29,13 @@
 }
 
 /* Keyboard focus, as a ring so it differs from the focused-app highlight.
- * The button is drawn at icon.maxSize and scaled down, so these sizes shrink
- * with it. */
+ * The button is drawn at icon.maxSize and scaled down, so the border shrinks
+ * with it. Corner radii come from Layout.radii(), set in code. */
 .tahoe-item:focus {
-    border-radius: 18px;
     border: 3px solid rgba(255, 255, 255, 0.85);
 }
 
 /* App in the foreground (SPEC §4 "focused"). */
 .tahoe-highlight {
-    border-radius: 12px;
     background-color: rgba(255, 255, 255, 0.26);
 }

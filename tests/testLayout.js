@@ -113,6 +113,18 @@ var tests = {
         });
     },
 
+    "corner radii are concentric"(assert) {
+        const tokens = Tokens.resolve({}, 2);
+        const rest = Layout.computeRest(KINDS, tokens, MONITOR, "bottom");
+        // Logical: 20 dock, 8 padding, 4 inset -> 20 - 4 = 16, then 16 - 4 = 12.
+        const r = Layout.radii(rest);
+        assert.equal(r.dock, 40);
+        assert.equal(r.highlight, 32);
+        assert.equal(r.icon, 24);
+        const shrunk = Layout.radii(Layout.computeRest(new Array(60).fill("icon"), tokens, MONITOR, "bottom"));
+        assert.ok(shrunk.dock < r.dock && shrunk.highlight < shrunk.dock, "shrinks with the dock");
+    },
+
     "too many icons shrink to fit the monitor"(assert) {
         const tokens = Tokens.resolve();
         const kinds = new Array(60).fill("icon");
