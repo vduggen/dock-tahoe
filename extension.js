@@ -109,7 +109,8 @@ class DockController {
     }
 
     // SPEC §7: launch when there is no window; otherwise bring forward the
-    // most recently used window, preferring this monitor. Never minimizes.
+    // most recently used window, preferring this monitor. Departs from §7 on
+    // request: clicking the focused app minimizes its windows, as a toggle.
     activate(entry, monitorIndex) {
         const local = entry.windows.filter(window => window.monitor === monitorIndex);
         const candidates = (local.length ? local : entry.windows)
@@ -121,6 +122,11 @@ class DockController {
             return;
         }
 
+        const focused = global.display.get_focus_window();
+        if (focused && !focused.minimized && candidates.includes(focused)) {
+            candidates.forEach(window => window.minimize());
+            return;
+        }
         this.activateWindow(candidates[0]);
     }
 

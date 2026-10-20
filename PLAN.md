@@ -117,6 +117,8 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   reconstruir tudo; indicadores no centro visual do ícone.
 - Clique abre o app ou traz a janela usada por último, preferindo o monitor
   do dock, conforme a §7. Em vez de ciclar janelas, o menu lista todas.
+  Desvio pedido em relação à §7: clicar no app em foco minimiza as janelas
+  dele naquele monitor.
 - Menu contextual com `PopupMenu`: janelas, Abrir/Nova janela, Manter
   no/Remover do Dock (persistido em `pinned-apps`), Fechar. Tooltip com o
   nome no hover e no foco do teclado.
