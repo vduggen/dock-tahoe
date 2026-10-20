@@ -48,6 +48,12 @@
     "units": "px",
     "dependency": "magnification"
   },
+  "glass-blur": {
+    "type": "switch",
+    "description": "Desfocar o fundo do vidro (experimental)",
+    "tooltip": "Desfoca o papel de parede atrás do Dock. Quando há uma janela atrás dele, usa o vidro simples.",
+    "default": false
+  },
   "autohide": {
     "type": "switch",
     "description": "Ocultar automaticamente",

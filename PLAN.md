@@ -192,6 +192,14 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
     - Limites: clonar `global.window_group` não pinta nada (sem volume de
       pintura), então o vidro borra só o papel de parede, não janelas
       atrás do dock. Faltam a máscara dos cantos e um kernel sem listras.
+- ✅ Blur experimental (`glass-blur`, desligado por padrão,
+  `lib/glassBlur.js`): clone do papel de parede numa faixa fixa do
+  comprimento do monitor, blur gaussiano em duas passadas (2 × 17 amostras,
+  alcance `glass.blurRadius`) e máscara dos cantos no shader; o vidro
+  simples continua por cima como tint e contorno. Some quando uma janela da
+  área de trabalho atual encosta no dock (checagem a cada 250 ms). Hover a
+  56–60 FPS. O ator interno precisa recortar os filhos: sem isso o efeito
+  desenha o fundo inteiro e cai para ~33 FPS.
 - Se passar: `Clutter.ShaderEffect` para refração, tint por luminância do
   backdrop, contorno e reflexos especulares. Se não passar: fallback com blur
   simples + gradiente + contorno (§3, "aparência simplificada").
