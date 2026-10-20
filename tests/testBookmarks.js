@@ -15,6 +15,19 @@ var tests = {
         assert.equal(list[3].name, "www", "trailing slash");
     },
 
+    "only folders among the XApp favorites"(assert) {
+        const list = Bookmarks.parseFavorites([
+            "file:///home/u/projects/portal-online::inode/directory",
+            "file:///home/u/notas.txt::text/plain",
+            "file:///home/u/V%C3%ADdeos::inode/directory"
+        ]);
+        assert.equal(list.length, 2, "files skipped");
+        assert.equal(list[0].uri, "file:///home/u/projects/portal-online");
+        assert.equal(list[0].name, "portal-online");
+        assert.equal(list[1].name, "Vídeos");
+        assert.equal(Bookmarks.parseFavorites(null).length, 0);
+    },
+
     "empty or bad input"(assert) {
         assert.equal(Bookmarks.parse("").length, 0);
         assert.equal(Bookmarks.parse(null).length, 0);

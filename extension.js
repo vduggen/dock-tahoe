@@ -246,15 +246,26 @@ class DockController {
     folderShortcuts(entry) {
         if (!entry.desktopFileId || this._fileManagerId() !== entry.desktopFileId)
             return null;
-        const shortcuts = [{ uri: Gio.File.new_for_path(GLib.get_home_dir()).get_uri(), name: "Pasta pessoal" }];
+        // As in Nemo's sidebar: "Favoritos", then the bookmarks.
+        let bookmarks = [{ uri: Gio.File.new_for_path(GLib.get_home_dir()).get_uri(), name: "Pasta pessoal" }];
         try {
             const file = Gio.File.new_for_path(GLib.build_filenamev([GLib.get_user_config_dir(), "gtk-3.0", "bookmarks"]));
             const [, contents] = file.load_contents(null);
-            return shortcuts.concat(Bookmarks.parse(new TextDecoder().decode(contents)));
+            bookmarks = bookmarks.concat(Bookmarks.parse(new TextDecoder().decode(contents)));
         } catch (e) {
             // No bookmarks file yet.
-            return shortcuts;
         }
+        return [
+            { title: "Favoritos", folders: this._xappFavorites() },
+            { title: "Marcadores", folders: bookmarks }
+        ].filter(section => section.folders.length);
+    }
+
+    _xappFavorites() {
+        const schema = Gio.SettingsSchemaSource.get_default().lookup("org.x.apps.favorites", true);
+        if (!schema)
+            return [];
+        return Bookmarks.parseFavorites(new Gio.Settings({ settings_schema: schema }).get_strv("list"));
     }
 
     openFolder(entry, uri, monitorIndex) {
