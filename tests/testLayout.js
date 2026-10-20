@@ -115,7 +115,8 @@ var tests = {
         Layout.POSITIONS.forEach(position => {
             const placed = Layout.place(Layout.computeRest(KINDS, tokens, MONITOR, position, 52), null, null);
             const center = placed.items[0].indicator.center;
-            const dot = { x: center.x - 2, y: center.y - 2, width: 4, height: 4 };
+            const diameter = tokens["indicator.diameter"];
+            const dot = { x: center.x - diameter / 2, y: center.y - diameter / 2, width: diameter, height: diameter };
             assert.near(edgeDistance(dot, position, MONITOR) - edgeDistance(placed.dock, position, MONITOR),
                 tokens["indicator.edgeGap"], EPSILON, position);
         });

@@ -200,9 +200,9 @@ spec e precisam ser comparadas com gravações do Tahoe:
     os lados.
   - `dock.cornerRadius` = 26 (SPEC §2: 20), ~55% do ícone; os raios
     concêntricos (`Layout.radii`) derivam daí.
-  - `indicator.edgeGap` = 4: centro da bolinha a 6 px da borda, um leve
-    respiro (referência ~5). Diâmetro fica 4, o menor que o St desenha
-    redondo (referência: ~3,3).
+  - `indicator.edgeGap` = 4: centro da bolinha a 7 px da borda, um leve
+    respiro (referência ~5). Diâmetro 6, aumentado a pedido do usuário
+    (referência: ~3,3).
 - Sem fundo no app em foco, como no Dock do macOS: só a bolinha muda de
   cor (azul de destaque; abertos ficam brancos).
 
