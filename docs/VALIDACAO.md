@@ -32,13 +32,25 @@ captura do Cinnamon e uma do Tahoe só sejam comparadas quando baterem.
 
 1. `./scripts/check.sh` passa.
 2. A extensão está ativa e o protótipo `macos-dock@unimestre.local`, não.
-3. Para capturas: `gnome-screenshot -f <arquivo>` (tela inteira) ou
-   `import -window root` (ImageMagick). Vídeos com a mesma taxa da referência,
-   para comparar quadro a quadro.
-4. Para ajustar tokens e tempos durante a comparação:
+3. Para capturas: `cjs scripts/capture.js <nome> [monitor]` tira a tela com
+   `gnome-screenshot`, recorta em volta do Dock (com folga para ampliação e
+   quique) e grava `captures/<data>-<nome>.png` e `.json` com o ambiente da
+   rodada (commit, Cinnamon, sessão, monitor, escala, configurações) e a
+   posição da pílula de vidro. `captures/` fica fora do Git. Vídeos com a
+   mesma taxa da referência, para comparar quadro a quadro.
+4. Para comparar com uma captura do Tahoe do mesmo cenário e ambiente:
+   `cjs scripts/compare.js <captura.png> <referência.png> <x,y,largura,altura> [escala]`,
+   com a pílula medida na referência (px da imagem) e a escala dela (2 em
+   Retina). As duas imagens vão para unidades lógicas e são alinhadas pela
+   pílula (centro ao longo do Dock, borda externa). Gera
+   `<captura>-overlay.png` (captura a 50% sobre a referência) e
+   `<captura>-diff.png` (diferença por pixel, mais claro é mais distante) e
+   imprime a diferença de tamanho da pílula, para o critério de geometria
+   (≤ 2 unidades lógicas), e a diferença média dos pixels.
+5. Para ajustar tokens e tempos durante a comparação:
    `./scripts/calibration.sh on` e a seção "Calibração (desenvolvimento)"
    nas configurações da extensão. Ao terminar, `off`.
-5. Erros: `~/.xsession-errors` (ou `journalctl --user -b`) e o Looking Glass
+6. Erros: `~/.xsession-errors` (ou `journalctl --user -b`) e o Looking Glass
    (`Alt+F2`, `lg`) antes e depois de cada cenário.
 
 ## Cenários obrigatórios

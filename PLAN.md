@@ -228,8 +228,11 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   [`docs/VALIDACAO.md`](docs/VALIDACAO.md), com o ambiente de cada rodada
   (os campos das capturas de referência), passos, resultado esperado, o
   que os testes já cobrem e as tabelas a preencher.
-- Capturas do Cinnamon com `gnome-screenshot`/`import`, comparadas por
-  sobreposição com as capturas do Tahoe, quando estiverem disponíveis.
+- ✅ Capturas do Cinnamon com `gnome-screenshot`, comparadas por
+  sobreposição com as capturas do Tahoe: `scripts/capture.js` (recorte do
+  Dock e ambiente da rodada) e `scripts/compare.js` (sobreposição, diferença
+  e tamanho da pílula em unidades lógicas). A comparação em si espera as
+  capturas do Tahoe.
 
 ## Hipóteses de geometria a calibrar
 
