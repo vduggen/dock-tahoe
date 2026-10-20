@@ -198,14 +198,13 @@ spec e precisam ser comparadas com gravações do Tahoe:
   - `icon.gap` = `dock.paddingX` = `dock.paddingY` = 14 (SPEC §2: 7 / 10 / 8),
     ~30% do ícone. Com tudo igual, cada ícone tem o mesmo espaço em todos
     os lados.
-  - `highlight.inset` = 7, metade do padding: o ícone em foco tem 7 px
-    dentro do destaque e o destaque 7 px até a borda, os vizinhos e o
-    separador. Com 4 / 10 o ícone ativo parecia apertado.
   - `dock.cornerRadius` = 26 (SPEC §2: 20), ~55% do ícone; os raios
     concêntricos (`Layout.radii`) derivam daí.
-  - `indicator.edgeGap` = 2: a bolinha fica na faixa de 7 px abaixo do
-    destaque, sem encostar nele (centro a 4 px da borda; referência ~5). Diâmetro fica 4, o menor que o St
-    desenha redondo (referência: ~3,3).
+  - `indicator.edgeGap` = 4: centro da bolinha a 6 px da borda, um leve
+    respiro (referência ~5). Diâmetro fica 4, o menor que o St desenha
+    redondo (referência: ~3,3).
+- Sem fundo no app em foco, como no Dock do macOS: só a bolinha muda de
+  cor (azul de destaque; abertos ficam brancos).
 
 ## Notas de comportamento do Muffin
 

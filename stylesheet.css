@@ -15,8 +15,14 @@
     background-color: transparent;
 }
 
+/* Running app. As in the macOS Dock, focus has no background of its own;
+ * only the dot of the app in the foreground (SPEC §4 "focused") changes. */
 .tahoe-indicator {
-    background-color: rgba(255, 255, 255, 0.82);
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.tahoe-indicator.focused {
+    background-color: rgb(10, 132, 255);
 }
 
 .tahoe-tooltip {
@@ -28,16 +34,10 @@
     font-size: 13px;
 }
 
-/* Keyboard focus, as a ring so it differs from the focused-app highlight.
- * The button is drawn at icon.maxSize and scaled down, so the border shrinks
+/* Keyboard focus, as a ring. The button is drawn at icon.maxSize and scaled down, so the border shrinks
  * with it. Corner radii come from Layout.radii(), set in code. */
 .tahoe-item:focus {
     border: 3px solid rgba(255, 255, 255, 0.85);
-}
-
-/* App in the foreground (SPEC §4 "focused"). */
-.tahoe-highlight {
-    background-color: rgba(255, 255, 255, 0.26);
 }
 
 .tahoe-separator {

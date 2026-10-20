@@ -113,7 +113,7 @@ var tests = {
         });
     },
 
-    "spacing is uniform around icons and the focused highlight"(assert) {
+    "spacing is uniform around icons"(assert) {
         const tokens = Tokens.resolve();
         const placed = Layout.place(Layout.computeRest(["icon", "icon", "icon"], tokens, MONITOR, "bottom"), null, null);
         const [a, b, c] = placed.items.map(item => item.rect);
@@ -121,22 +121,17 @@ var tests = {
         const gaps = [a.x - dock.x, b.x - (a.x + a.width), c.x - (b.x + b.width),
             dock.x + dock.width - (c.x + c.width), a.y - dock.y, dock.y + dock.height - (a.y + a.height)];
         gaps.forEach((gap, index) => assert.near(gap, tokens["icon.gap"], EPSILON, "gap " + index));
-        // Highlight on the middle icon: same space to its neighbors and the edge.
-        const inset = tokens["highlight.inset"];
-        assert.near(b.x - inset - (a.x + a.width), b.y - inset - dock.y, EPSILON, "neighbor = edge");
-        assert.near(b.y - inset - dock.y, inset, EPSILON, "outside = inside");
     },
 
     "corner radii are concentric"(assert) {
         const tokens = Tokens.resolve({}, 2);
         const rest = Layout.computeRest(KINDS, tokens, MONITOR, "bottom");
-        // Logical: 26 dock, 14 padding, 7 inset -> 26 - 7 = 19, then 19 - 7 = 12.
+        // Logical: 26 dock, 14 padding -> 26 - 14 = 12.
         const r = Layout.radii(rest);
         assert.equal(r.dock, 52);
-        assert.equal(r.highlight, 38);
         assert.equal(r.icon, 24);
         const shrunk = Layout.radii(Layout.computeRest(new Array(60).fill("icon"), tokens, MONITOR, "bottom"));
-        assert.ok(shrunk.dock < r.dock && shrunk.highlight < shrunk.dock, "shrinks with the dock");
+        assert.ok(shrunk.dock < r.dock && shrunk.icon < shrunk.dock, "shrinks with the dock");
     },
 
     "too many icons shrink to fit the monitor"(assert) {
