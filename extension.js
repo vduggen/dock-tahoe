@@ -247,9 +247,12 @@ class DockController {
             window.set_icon_geometry(new Meta.Rectangle(rect));
     }
 
-    // shown: the pinned desktop ids in their new dock order.
+    // shown: the pinned desktop ids in their new dock order, a newly
+    // pinned app among them.
     reorderPinned(shown) {
-        this.settings.setPinnedApps(Grouping.reorderPinned(this.settings.pinnedApps, shown));
+        const saved = this.settings.pinnedApps;
+        const added = shown.filter(id => saved.indexOf(id) < 0);
+        this.settings.setPinnedApps(Grouping.reorderPinned(saved.concat(added), shown));
         this.tracker.reloadPinned();
     }
 
