@@ -157,8 +157,8 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   e com linha própria; persistidos em `recent-apps`, desligáveis em
   `show-recent-apps`. Saem ao reabrir ou fixar.
 - ✅ DnD: reordenar fixados; fixar ao soltar um app (aberto, recente, de
-  outro dock ou do menu do Cinnamon); desafixar ao soltar longe do dock ou
-  depois do último fixado.
+  outro dock ou do menu do Cinnamon) sobre os fixados; desafixar ou tirar
+  dos Recentes ao soltar longe do dock ou depois do último fixado.
 - Adiado: encaminhar arquivo ao app e fixar `.desktop` vindo do Nemo. O
   Cinnamon só repassa ao chrome o hover de arrastos XDND
   (`ui/xdndHandler.js`), sem os URIs nem o soltar; exigiria uma janela X
