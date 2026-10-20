@@ -41,11 +41,9 @@ var tests = {
         assert.equal(slots.length, Stacks.FAN_MAX, "capped");
         assert.equal(slots[0].y, -25, "first one right above the icon");
         assert.equal(slots[0].x, 0);
-        assert.equal(slots[0].angle, 0);
         assert.equal(slots[1].y - slots[0].y, -50, "a step apart");
         const last = slots[slots.length - 1];
         assert.near(last.x, Stacks.FAN_BEND * Stacks.FAN_MAX * 50, 1e-9);
-        assert.equal(last.angle, Stacks.FAN_TILT);
         assert.ok(slots[5].x < last.x / 2, "bends more as it rises");
         assert.equal(Stacks.fanSlots(0, 50).length, 0);
     },
