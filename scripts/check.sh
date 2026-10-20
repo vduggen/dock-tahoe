@@ -6,4 +6,5 @@ for file in "$project_dir"/extension.js "$project_dir"/lib/*.js "$project_dir"/t
     [[ -e "$file" ]] && node --check "$file"
 done
 python3 -m json.tool "$project_dir/metadata.json" >/dev/null
-printf 'JavaScript syntax and metadata are valid.\n'
+(cd "$project_dir" && cjs tests/run.js)
+printf 'JavaScript syntax, metadata and tests are valid.\n'
