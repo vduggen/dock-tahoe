@@ -1,0 +1,7 @@
+{
+  "uuid": "tahoe-dock@unimestre.local",
+  "name": "Dock Tahoe",
+  "description": "Dock flutuante inspirado no macOS Tahoe 26, para Cinnamon",
+  "version": "0.1.0",
+  "cinnamon-version": ["6.6"]
+}
