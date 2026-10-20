@@ -159,6 +159,13 @@ class DockController {
         Main.activateWindow(window, time, workspace ? workspace.index() : undefined);
     }
 
+    // A hovered preview: focus without leaving the current workspace.
+    focusWindow(window) {
+        const workspace = window.get_workspace();
+        if (window.is_on_all_workspaces() || workspace === global.workspace_manager.get_active_workspace())
+            this.activateWindow(window);
+    }
+
     openTrash() {
         this.trash.open();
     }
