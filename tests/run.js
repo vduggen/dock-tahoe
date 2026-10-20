@@ -2,7 +2,7 @@
 //   cd <project> && cjs tests/run.js
 imports.searchPath.unshift(".");
 
-const SUITES = ["testTokens", "testState", "testGrouping", "testMagnification", "testAnimation", "testBadges", "testBookmarks", "testBubble", "testLayout", "testScenarios"];
+const SUITES = ["testTokens", "testState", "testGrouping", "testMagnification", "testAnimation", "testBadges", "testBookmarks", "testBubble", "testStacks", "testLayout", "testScenarios"];
 
 const assert = {
     equal(actual, expected, label) {

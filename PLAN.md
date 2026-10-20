@@ -167,7 +167,12 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   minimizada vira uma miniatura viva (selo do app no canto) na seção da
   lixeira, em ordem de minimização; a animação mira a lixeira e o clique
   restaura.
-- Pastas e pilhas: leque, grade e lista.
+- ✅ Pastas e pilhas: Downloads (`show-downloads`) e as pastas de
+  `folders`, na seção da lixeira, vigiadas por `Gio.FileMonitor`. O clique
+  abre a pilha em leque (até 12 itens, só com o dock embaixo), grade ou
+  lista, com "Abrir em <gerenciador>" no fim; o menu de contexto escolhe a
+  ordem e a visualização (`stack-options`). Esc, clique fora ou no próprio
+  ícone fecham; setas e Tab navegam.
 
 ### Etapa 6 — P2: vidro e acabamento
 

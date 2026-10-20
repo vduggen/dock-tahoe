@@ -156,3 +156,99 @@
     color: white;
     background-color: rgb(255, 69, 58);
 }
+
+/* Folder stacks (lib/stackView.js). Grid and list share the bubble's
+ * colors; padding matches STACK_PADDING. */
+.tahoe-stack {
+    -bubble-fill: rgba(36, 36, 40, 0.92);
+    -bubble-border: rgba(255, 255, 255, 0.14);
+    padding: 8px;
+    spacing: 6px;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.tahoe-stack-title {
+    padding: 2px 6px 4px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.tahoe-stack-cell {
+    width: 88px;
+    padding: 6px 4px;
+    border-radius: 8px;
+}
+
+.tahoe-stack-cell-label {
+    padding-top: 4px;
+    font-size: 11px;
+}
+
+.tahoe-stack-list {
+    min-width: 220px;
+}
+
+.tahoe-stack-row {
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.tahoe-stack-row-box {
+    spacing: 8px;
+}
+
+.tahoe-stack-row-label {
+    font-size: 13px;
+    max-width: 320px;
+}
+
+.tahoe-stack-cell:hover,
+.tahoe-stack-cell:focus,
+.tahoe-stack-row:hover,
+.tahoe-stack-row:focus,
+.tahoe-stack-open:hover,
+.tahoe-stack-open:focus {
+    background-color: rgb(10, 132, 255);
+    color: white;
+}
+
+.tahoe-stack-empty {
+    padding: 12px 24px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.tahoe-stack-open {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.tahoe-stack-open-label {
+    font-size: 12px;
+}
+
+/* The fan: an icon per item with its name on a pill to its left. */
+.tahoe-stack-fan-item {
+    spacing: 8px;
+}
+
+.tahoe-stack-fan-label {
+    padding: 3px 10px;
+    border-radius: 11px;
+    background-color: rgba(36, 36, 40, 0.88);
+    max-width: 220px;
+}
+
+.tahoe-stack-fan-label.folder {
+    background-color: rgba(10, 132, 255, 0.9);
+}
+
+.tahoe-stack-fan-text {
+    color: white;
+    font-size: 12px;
+}
+
+.tahoe-stack-fan-button:hover .tahoe-stack-fan-label,
+.tahoe-stack-fan-button:focus .tahoe-stack-fan-label {
+    background-color: rgb(10, 132, 255);
+}

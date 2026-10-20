@@ -183,6 +183,7 @@ var tests = {
         const pinned = { pinned: true }, running = { pinned: false }, trash = { trash: true };
         const recent = { pinned: false, recent: true };
         const minimized = { pinned: false, minimizedWindow: {} };
+        const folder = { pinned: false, folder: {} };
         const shape = entries => {
             const result = Layout.sections(entries);
             return result.kinds.map(kind => kind === "icon" ? "i" : "|").join("") + " " + result.roles.join(",");
@@ -196,6 +197,8 @@ var tests = {
         assert.equal(shape([pinned, recent, recent, trash]), "i|ii|i recent,trash", "no running");
         assert.equal(shape([pinned, running, minimized, minimized, trash]), "i|i|iii running,trash",
             "minimized windows share the trash's section");
+        assert.equal(shape([pinned, recent, folder, minimized, trash]), "i|i|iii recent,trash",
+            "folders too");
     },
 
     "thumbnails keep their aspect, centered and never enlarged"(assert) {

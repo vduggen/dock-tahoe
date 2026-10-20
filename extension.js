@@ -12,10 +12,12 @@ const { AppTracker } = require("./lib/appTracker.js");
 const { DockSettings } = require("./lib/settings.js");
 const { DockView } = require("./lib/dockView.js");
 const { LauncherEntry } = require("./lib/launcherEntry.js");
+const { Folders } = require("./lib/folders.js");
 const { Trash } = require("./lib/trash.js");
 const Bookmarks = require("./lib/bookmarks.js");
 const Grouping = require("./lib/grouping.js");
 const Layout = require("./lib/layout.js");
+const Stacks = require("./lib/stacks.js");
 
 const PANEL_KEYS = ["panels-enabled", "panels-height", "panels-autohide"];
 const HOTKEY_NAME = "tahoe-dock-focus";
@@ -49,7 +51,8 @@ class DockController {
             autohide: () => this._rebuildViews(),
             appearance: () => this._rebuildViews(),
             workspaces: () => this._updateViews(),
-            recent: () => this._updateViews()
+            recent: () => this._updateViews(),
+            folders: () => this._syncFolders()
         });
         this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
             this._snapshot = snapshot;
@@ -58,6 +61,7 @@ class DockController {
         }, window => this._aimMinimize(window));
         this.badges = new LauncherEntry(() => this._updateViews());
         this.trash = new Trash(() => this._updateViews());
+        this.folders = new Folders(() => this._updateViews());
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
     }
 
@@ -72,6 +76,7 @@ class DockController {
         this.tracker.enable();
         this.badges.enable();
         this.trash.enable();
+        this._syncFolders();
         this._bindHotkey();
     }
 
@@ -85,6 +90,7 @@ class DockController {
         this.tracker.disable();
         this.badges.disable();
         this.trash.disable();
+        this.folders.destroy();
         this._signals.forEach(([object, id]) => object.disconnect(id));
         this._signals = [];
         this.views.forEach(view => view.destroy());
@@ -402,6 +408,59 @@ class DockController {
         this._updateViews();
     }
 
+    // Downloads, when shown, then the folders the user added, once each.
+    _syncFolders() {
+        const downloads = Folders.downloadsUri();
+        const uris = (this.settings.showDownloads && downloads ? [downloads] : [])
+            .concat((this.settings.folders || []).map(row => row && row.uri).filter(Boolean));
+        this.folders.set(uris.filter((uri, index) => uris.indexOf(uri) === index));
+        this._updateViews();
+    }
+
+    // Folders as dock entries, with their items in the order they show.
+    _folderEntries() {
+        const downloads = Folders.downloadsUri();
+        return this.folders.list.map(folder => {
+            const options = Stacks.options((this.settings.stackOptions || {})[folder.uri], folder.uri === downloads);
+            return {
+                key: "folder:" + folder.uri,
+                folder: true,
+                uri: folder.uri,
+                view: options.view,
+                sort: options.sort,
+                items: Stacks.sortItems(folder.items, options.sort),
+                pinned: false,
+                name: folder.name,
+                gicon: folder.gicon,
+                windows: [],
+                localWindows: [],
+                facts: { pinned: false, running: false, hasWindows: false, focused: false, minimized: false, attention: false },
+                badge: null
+            };
+        });
+    }
+
+    openUri(uri) {
+        this.folders.open(uri);
+    }
+
+    // key: "view" or "sort", from the folder's menu.
+    setStackOption(entry, key, value) {
+        const options = Object.assign({}, this.settings.stackOptions);
+        options[entry.uri] = Object.assign({}, options[entry.uri], { [key]: value });
+        this.settings.setStackOptions(options);
+        this._updateViews();
+    }
+
+    // Downloads is switched off; an added folder leaves the list.
+    removeFolder(entry) {
+        if (entry.uri === Folders.downloadsUri())
+            this.settings.setShowDownloads(false);
+        else
+            this.settings.setFolders((this.settings.folders || []).filter(row => !row || row.uri !== entry.uri));
+        this._syncFolders();
+    }
+
     // With minimize-into-icon off, each minimized window of `entries` as
     // its own entry, oldest first, as the macOS Dock lines them up.
     _minimizedEntries(entries) {
@@ -477,7 +536,7 @@ class DockController {
                         badge: this.badges.label(item.desktopId)
                     }));
             });
-            entries.push(...this._recentEntries(), ...this._minimizedEntries(entries));
+            entries.push(...this._recentEntries(), ...this._folderEntries(), ...this._minimizedEntries(entries));
             const trash = this._trashItem();
             const shown = this.settings.currentWorkspaceOnly ? Grouping.onWorkspace(trash, workspace) : trash;
             entries.push(Object.assign(this.trash.entry(shown.windows, Grouping.facts(shown, index)),

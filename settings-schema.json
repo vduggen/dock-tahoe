@@ -71,6 +71,24 @@
     "tooltip": "Desligado, cada janela minimizada ganha uma miniatura própria antes da lixeira, como no macOS.",
     "default": true
   },
+  "show-downloads": {
+    "type": "switch",
+    "description": "Mostrar a pasta Downloads",
+    "default": true
+  },
+  "folders": {
+    "type": "list",
+    "description": "Pastas no Dock",
+    "tooltip": "Cada pasta abre como uma pilha antes da lixeira. A ordenação e a visualização ficam no menu de contexto dela.",
+    "columns": [
+      { "id": "uri", "title": "Pasta", "type": "file", "select-dir": true }
+    ],
+    "default": []
+  },
+  "stack-options": {
+    "type": "generic",
+    "default": {}
+  },
   "focus-hotkey": {
     "type": "keybinding",
     "description": "Focar o Dock pelo teclado",
