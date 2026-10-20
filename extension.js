@@ -71,7 +71,7 @@ class DockController {
         const scale = this._themeContext.scale_factor;
         const position = "bottom";
         this.views = Main.layoutManager.monitors.map(monitor =>
-            new DockView(monitor, position, scale, this._panelInset(monitor.index, position)));
+            new DockView(monitor, position, scale, this._panelInset(monitor.index, position), this));
         this._updateViews();
     }
 
@@ -86,6 +86,38 @@ class DockController {
             .reduce((sum, panel) => sum + (position === "bottom"
                 ? panel.actor.get_height()
                 : panel.actor.get_width()), 0);
+    }
+
+    // SPEC §7: launch when there is no window; otherwise bring forward the
+    // most recently used window, preferring this monitor. Never minimizes.
+    activate(entry, monitorIndex) {
+        const local = entry.windows.filter(window => window.monitor === monitorIndex);
+        const candidates = (local.length ? local : entry.windows)
+            .map(window => window.metaWindow)
+            .filter(Boolean)
+            .sort((a, b) => b.get_user_time() - a.get_user_time());
+        if (!candidates.length) {
+            this._launch(entry);
+            return;
+        }
+
+        const target = candidates[0];
+        const time = global.get_current_time();
+        if (target.minimized)
+            target.unminimize(time);
+        const workspace = target.get_workspace();
+        Main.activateWindow(target, time, workspace ? workspace.index() : undefined);
+    }
+
+    _launch(entry) {
+        try {
+            if (entry.app)
+                entry.app.activate();
+            else if (entry.info)
+                entry.info.launch([], global.create_app_launch_context());
+        } catch (e) {
+            global.logError(e, "Dock Tahoe: falha ao abrir " + entry.name);
+        }
     }
 
     // Each monitor shows the pinned apps plus the unpinned apps with windows
