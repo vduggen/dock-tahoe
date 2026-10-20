@@ -53,12 +53,12 @@ var tests = {
         const tokens = Tokens.resolve();
         const rest = Layout.computeRest(KINDS, tokens, MONITOR, "bottom");
         assert.equal(rest.ratio, 1);
-        // 2·8 padding + 5·48 icons + 1 separator + 5·8 gaps
-        assert.equal(rest.length, 16 + 240 + 1 + 40);
+        // 2·14 padding + 5·48 icons + 1 separator + 5·14 gaps
+        assert.equal(rest.length, 28 + 240 + 1 + 70);
         const placed = Layout.place(rest, null, null);
         assert.near(placed.dock.x + placed.dock.width / 2, MONITOR.x + MONITOR.width / 2,
             0.5, "centered within half a pixel");
-        assert.equal(placed.dock.height, 48 + 16);
+        assert.equal(placed.dock.height, 48 + 2 * 14);
         assert.equal(edgeDistance(placed.dock, "bottom", MONITOR), 5);
         checkIntegrity(assert, placed, MONITOR, "rest");
     },
@@ -68,7 +68,7 @@ var tests = {
         const separator = Layout.place(rest, null, null).items[3];
         assert.equal(separator.kind, "separator");
         assert.equal(separator.rect.height, 36);
-        assert.near(edgeDistance(separator.rect, "bottom", MONITOR), 5 + (64 - 36) / 2,
+        assert.near(edgeDistance(separator.rect, "bottom", MONITOR), 5 + (rest.crossLength - 36) / 2,
             EPSILON, "cross centered");
     },
 
@@ -109,7 +109,7 @@ var tests = {
             const center = placed.items[0].indicator.center;
             const dot = { x: center.x - 2, y: center.y - 2, width: 4, height: 4 };
             assert.near(edgeDistance(dot, position, MONITOR) - edgeDistance(placed.dock, position, MONITOR),
-                4, EPSILON, position);
+                tokens["indicator.edgeGap"], EPSILON, position);
         });
     },
 
@@ -120,19 +120,20 @@ var tests = {
         const dock = placed.dock;
         const gaps = [a.x - dock.x, b.x - (a.x + a.width), c.x - (b.x + b.width),
             dock.x + dock.width - (c.x + c.width), a.y - dock.y, dock.y + dock.height - (a.y + a.height)];
-        gaps.forEach((gap, index) => assert.near(gap, 8, EPSILON, "gap " + index));
+        gaps.forEach((gap, index) => assert.near(gap, tokens["icon.gap"], EPSILON, "gap " + index));
         // Highlight on the middle icon: same space to its neighbors and the edge.
         const inset = tokens["highlight.inset"];
         assert.near(b.x - inset - (a.x + a.width), b.y - inset - dock.y, EPSILON, "neighbor = edge");
+        assert.near(b.y - inset - dock.y, inset, EPSILON, "outside = inside");
     },
 
     "corner radii are concentric"(assert) {
         const tokens = Tokens.resolve({}, 2);
         const rest = Layout.computeRest(KINDS, tokens, MONITOR, "bottom");
-        // Logical: 20 dock, 8 padding, 4 inset -> 20 - 4 = 16, then 16 - 4 = 12.
+        // Logical: 26 dock, 14 padding, 7 inset -> 26 - 7 = 19, then 19 - 7 = 12.
         const r = Layout.radii(rest);
-        assert.equal(r.dock, 40);
-        assert.equal(r.highlight, 32);
+        assert.equal(r.dock, 52);
+        assert.equal(r.highlight, 38);
         assert.equal(r.icon, 24);
         const shrunk = Layout.radii(Layout.computeRest(new Array(60).fill("icon"), tokens, MONITOR, "bottom"));
         assert.ok(shrunk.dock < r.dock && shrunk.highlight < shrunk.dock, "shrinks with the dock");
@@ -146,7 +147,7 @@ var tests = {
         assert.near(rest.length, MONITOR.width - 10, EPSILON, "fills available width");
         const placed = Layout.place(rest, null, null);
         checkIntegrity(assert, placed, MONITOR, "shrunk");
-        assert.near(placed.dock.height, 64 * rest.ratio, EPSILON, "proportional height");
+        assert.near(placed.dock.height, (48 + 2 * 14) * rest.ratio, EPSILON, "proportional height");
     },
 
     "magnification that does not fit is scaled down"(assert) {

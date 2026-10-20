@@ -179,11 +179,19 @@ spec e precisam ser comparadas com gravações do Tahoe:
 
 ## Desvios aprovados da spec
 
-- `dock.paddingX` = 8 (SPEC §2: 10), igual ao `paddingY`, para que os raios
-  concêntricos (`Layout.radii`) também valham nas pontas do dock.
-- `icon.gap` = 8 (SPEC §2: 7), igual ao padding: cada ícone tem o mesmo
-  espaço em todos os lados, e o destaque do app em foco fica a
-  `padding − highlight.inset` (4) da borda, dos vizinhos e do separador.
+- Espaçamento segue a referência do dock do macOS enviada pelo usuário
+  (ícone de 110 px medido e escalado para 48 px):
+  - `icon.gap` = `dock.paddingX` = `dock.paddingY` = 14 (SPEC §2: 7 / 10 / 8),
+    ~30% do ícone. Com tudo igual, cada ícone tem o mesmo espaço em todos
+    os lados.
+  - `highlight.inset` = 7, metade do padding: o ícone em foco tem 7 px
+    dentro do destaque e o destaque 7 px até a borda, os vizinhos e o
+    separador. Com 4 / 10 o ícone ativo parecia apertado.
+  - `dock.cornerRadius` = 26 (SPEC §2: 20), ~55% do ícone; os raios
+    concêntricos (`Layout.radii`) derivam daí.
+  - `indicator.edgeGap` = 2: a bolinha fica na faixa de 7 px abaixo do
+    destaque, sem encostar nele (centro a 4 px da borda; referência ~5). Diâmetro fica 4, o menor que o St
+    desenha redondo (referência: ~3,3).
 
 ## Notas de comportamento do Muffin
 

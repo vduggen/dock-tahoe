@@ -16,7 +16,7 @@ var tests = {
     "overrides replace defaults without mutating them"(assert) {
         const tokens = Tokens.resolve({ "icon.gap": 9 });
         assert.equal(tokens["icon.gap"], 9);
-        assert.equal(Tokens.DEFAULTS["icon.gap"], 8);
+        assert.equal(Tokens.DEFAULTS["icon.gap"], 14);
     },
 
     "invalid input is rejected"(assert) {
