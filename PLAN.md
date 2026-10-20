@@ -163,7 +163,10 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   Cinnamon só repassa ao chrome o hover de arrastos XDND
   (`ui/xdndHandler.js`), sem os URIs nem o soltar; exigiria uma janela X
   auxiliar sobre o dock durante o arrasto.
-- Minimizadas separadas (opcional).
+- ✅ Minimizadas separadas: com `minimize-into-icon` desligado, cada janela
+  minimizada vira uma miniatura viva (selo do app no canto) na seção da
+  lixeira, em ordem de minimização; a animação mira a lixeira e o clique
+  restaura.
 - Pastas e pilhas: leque, grade e lista.
 
 ### Etapa 6 — P2: vidro e acabamento

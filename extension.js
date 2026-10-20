@@ -34,6 +34,8 @@ class DockController {
         this._snapshot = { items: [] };
         // Unpinned apps running at the last snapshot; null before the first.
         this._running = null;
+        // When each window last minimized, to order their thumbnails.
+        this._minimizedAt = new Map();
         this._rebuildId = 0;
         // { app, monitor, until }: where the next window of a launch goes.
         this._placement = null;
@@ -258,8 +260,12 @@ class DockController {
     // monitor the panel is. Set right before the animation, it is the icon
     // in the dock of the window's own monitor.
     _aimMinimize(window) {
+        if (window.minimized)
+            this._minimizedAt.set(window, GLib.get_monotonic_time());
+        else
+            this._minimizedAt.delete(window);
         const view = this.views.find(candidate => candidate.monitor.index === window.get_monitor());
-        const rect = view && view.iconRect(window);
+        const rect = view && view.iconRect(window, !this.settings.minimizeIntoIcon);
         if (rect)
             window.set_icon_geometry(new Meta.Rectangle(rect));
     }
@@ -396,6 +402,34 @@ class DockController {
         this._updateViews();
     }
 
+    // With minimize-into-icon off, each minimized window of `entries` as
+    // its own entry, oldest first, as the macOS Dock lines them up.
+    _minimizedEntries(entries) {
+        if (this.settings.minimizeIntoIcon)
+            return [];
+        const minimized = [];
+        entries.forEach(entry => entry.localWindows.forEach(window => {
+            if (window.minimized && window.metaWindow)
+                minimized.push({ entry: entry, window: window });
+        }));
+        const at = window => this._minimizedAt.get(window.metaWindow) || 0;
+        return minimized.sort((a, b) => at(a.window) - at(b.window)).map(({ entry, window }) => ({
+            key: "minimized:" + window.id,
+            minimizedWindow: window.metaWindow,
+            pinned: false,
+            running: true,
+            desktopFileId: null,
+            app: entry.app,
+            info: entry.info,
+            gicon: entry.gicon,
+            name: window.metaWindow.get_title() || entry.name,
+            windows: [window],
+            localWindows: [window],
+            facts: { pinned: false, running: true, hasWindows: false, focused: false, minimized: true, attention: false },
+            badge: null
+        }));
+    }
+
     // Recent apps as dock entries: launchers with no windows.
     _recentEntries() {
         if (!this.settings.showRecentApps)
@@ -443,7 +477,7 @@ class DockController {
                         badge: this.badges.label(item.desktopId)
                     }));
             });
-            entries.push(...this._recentEntries());
+            entries.push(...this._recentEntries(), ...this._minimizedEntries(entries));
             const trash = this._trashItem();
             const shown = this.settings.currentWorkspaceOnly ? Grouping.onWorkspace(trash, workspace) : trash;
             entries.push(Object.assign(this.trash.entry(shown.windows, Grouping.facts(shown, index)),

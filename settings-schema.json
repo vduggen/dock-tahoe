@@ -65,6 +65,12 @@
     "tooltip": "Até 3 apps não fixados fechados há pouco, depois dos apps abertos.",
     "default": true
   },
+  "minimize-into-icon": {
+    "type": "switch",
+    "description": "Minimizar janelas no ícone do app",
+    "tooltip": "Desligado, cada janela minimizada ganha uma miniatura própria antes da lixeira, como no macOS.",
+    "default": true
+  },
   "focus-hotkey": {
     "type": "keybinding",
     "description": "Focar o Dock pelo teclado",
