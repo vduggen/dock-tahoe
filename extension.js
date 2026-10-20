@@ -101,12 +101,42 @@ class DockController {
             return;
         }
 
-        const target = candidates[0];
+        this.activateWindow(candidates[0]);
+    }
+
+    activateWindow(window) {
         const time = global.get_current_time();
-        if (target.minimized)
-            target.unminimize(time);
-        const workspace = target.get_workspace();
-        Main.activateWindow(target, time, workspace ? workspace.index() : undefined);
+        if (window.minimized)
+            window.unminimize();
+        const workspace = window.get_workspace();
+        Main.activateWindow(window, time, workspace ? workspace.index() : undefined);
+    }
+
+    openNewWindow(entry) {
+        if (entry.app && entry.windows.length)
+            entry.app.open_new_window(-1);
+        else
+            this._launch(entry);
+    }
+
+    // Window-backed apps have no desktop file, so the menu never offers them.
+    togglePin(entry) {
+        const pinned = this.settings.pinnedApps.slice();
+        const index = pinned.indexOf(entry.desktopFileId);
+        if (index >= 0)
+            pinned.splice(index, 1);
+        else
+            pinned.push(entry.desktopFileId);
+        this.settings.setPinnedApps(pinned);
+        this.tracker.reloadPinned();
+    }
+
+    closeWindows(entry) {
+        const time = global.get_current_time();
+        entry.windows.forEach(window => {
+            if (window.metaWindow)
+                window.metaWindow.delete(time);
+        });
     }
 
     _launch(entry) {
