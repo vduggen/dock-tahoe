@@ -1,38 +1,72 @@
 // Dock Tahoe — entry points called by Cinnamon's extension system.
 
+const St = imports.gi.St;
+const Main = imports.ui.main;
+
 const { AppTracker } = require("./lib/appTracker.js");
 const { DockSettings } = require("./lib/settings.js");
+const { DockView } = require("./lib/dockView.js");
 const Grouping = require("./lib/grouping.js");
-const State = require("./lib/state.js");
 
 let _metadata = null;
 let _controller = null;
 
 class DockController {
     constructor(metadata) {
-        this._lastSummary = "";
+        this.views = [];
+        this._signals = [];
+        this._snapshot = { items: [] };
         this.settings = new DockSettings(metadata.uuid, () => this.tracker.reloadPinned());
-        this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => this._update(snapshot));
+        this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
+            this._snapshot = snapshot;
+            this._updateViews();
+        });
+        this._themeContext = St.ThemeContext.get_for_stage(global.stage);
     }
 
     enable() {
+        this._connect(Main.layoutManager, "monitors-changed", () => this._rebuildViews());
+        this._connect(this._themeContext, "notify::scale-factor", () => this._rebuildViews());
+        this._rebuildViews();
         this.tracker.enable();
     }
 
     disable() {
         this.tracker.disable();
+        this._signals.forEach(([object, id]) => object.disconnect(id));
+        this._signals = [];
+        this.views.forEach(view => view.destroy());
+        this.views = [];
         this.settings.destroy();
     }
 
-    // Until the dock view lands (stage 3), report item states in the log.
-    _update(snapshot) {
-        const summary = snapshot.items.map(item =>
-            item.key + "[" + State.describe(State.fromFacts(Grouping.facts(item)), State.AppFlag) + "]"
-        ).join(" ");
-        if (summary === this._lastSummary)
-            return;
-        this._lastSummary = summary;
-        global.log("Dock Tahoe: " + summary);
+    _connect(object, signal, callback) {
+        this._signals.push([object, object.connect(signal, callback)]);
+    }
+
+    _rebuildViews() {
+        this.views.forEach(view => view.destroy());
+        const scale = this._themeContext.scale_factor;
+        this.views = Main.layoutManager.monitors.map(monitor => new DockView(monitor, "bottom", scale));
+        this._updateViews();
+    }
+
+    // Each monitor shows the pinned apps plus the unpinned apps with windows
+    // on it; running apps without any window go to the primary monitor.
+    _updateViews() {
+        const primary = Main.layoutManager.primaryIndex;
+        this.views.forEach(view => {
+            const index = view.monitor.index;
+            const entries = [];
+            this._snapshot.items.forEach(item => {
+                const facts = Grouping.facts(item, index);
+                const visible = item.pinned || facts.hasWindows ||
+                    (item.windows.length === 0 && item.running && index === primary);
+                if (visible)
+                    entries.push(Object.assign({}, item, { facts: facts }));
+            });
+            view.update(entries);
+        });
     }
 }
 
