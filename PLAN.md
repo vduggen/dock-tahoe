@@ -212,7 +212,15 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   por um `Clutter.ShaderEffect` no ícone original, sem máscara. Escura
   escurece só as áreas claras e sem cor; tonalizada mapeia a luminância na
   cor escolhida. Hover a 60 FPS com todos os ícones na escura.
-- Modo de calibração (§9) escondido atrás de uma chave de desenvolvimento.
+- ✅ Modo de calibração (§9, `lib/calibration.js`): a chave oculta
+  `calibration` (`scripts/calibration.sh on|off`) revela a seção
+  "Calibração (desenvolvimento)" nas configurações, com espaçamentos,
+  indicador, separador, alcance da ampliação, sombra, blur, refração,
+  durações e a curva de reordenar. O padrão de cada chave é o valor que ela
+  substitui (testado contra `Tokens.DEFAULTS` e `Animation.TIMING`); com a
+  chave desligada, nada muda. O Cinnamon só relê o arquivo de configuração
+  quando avisado por D-Bus (`updateSetting`), como a janela de configurações
+  faz.
 
 ### Etapa 7 — Validação
 

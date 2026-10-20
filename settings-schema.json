@@ -117,5 +117,209 @@
     "type": "keybinding",
     "description": "Focar o Dock pelo teclado",
     "default": "<Super><Alt>d"
+  },
+  "calibration": {
+    "type": "generic",
+    "default": false
+  },
+  "calibration-section": {
+    "type": "section",
+    "description": "Calibração (desenvolvimento)",
+    "dependency": "calibration"
+  },
+  "cal-icon-gap": {
+    "type": "spinbutton",
+    "description": "Espaço entre ícones",
+    "default": 14,
+    "min": 0,
+    "max": 40,
+    "step": 1,
+    "units": "px",
+    "tooltip": "Valores em px para ícones de 48 px; os espaçamentos acompanham o tamanho dos ícones."
+  },
+  "cal-padding-x": {
+    "type": "spinbutton",
+    "description": "Margem lateral do Dock",
+    "default": 14,
+    "min": 0,
+    "max": 40,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-padding-y": {
+    "type": "spinbutton",
+    "description": "Margem vertical do Dock",
+    "default": 14,
+    "min": 0,
+    "max": 40,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-bottom-offset": {
+    "type": "spinbutton",
+    "description": "Distância da borda da tela",
+    "default": 5,
+    "min": 0,
+    "max": 40,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-corner-radius": {
+    "type": "spinbutton",
+    "description": "Raio dos cantos do Dock",
+    "default": 26,
+    "min": 0,
+    "max": 60,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-indicator-diameter": {
+    "type": "spinbutton",
+    "description": "Diâmetro do indicador",
+    "default": 6,
+    "min": 1,
+    "max": 16,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-indicator-edge-gap": {
+    "type": "spinbutton",
+    "description": "Distância do indicador à borda",
+    "default": 4,
+    "min": 0,
+    "max": 20,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-separator-height": {
+    "type": "spinbutton",
+    "description": "Altura do separador",
+    "default": 36,
+    "min": 8,
+    "max": 72,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-magnification-sigma": {
+    "type": "spinbutton",
+    "description": "Alcance da ampliação",
+    "default": 60,
+    "min": 10,
+    "max": 200,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-shadow-y": {
+    "type": "spinbutton",
+    "description": "Deslocamento da sombra",
+    "default": 8,
+    "min": 0,
+    "max": 16,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-shadow-blur": {
+    "type": "spinbutton",
+    "description": "Desfoque da sombra",
+    "default": 24,
+    "min": 0,
+    "max": 24,
+    "step": 1,
+    "units": "px"
+  },
+  "cal-shadow-opacity": {
+    "type": "spinbutton",
+    "description": "Opacidade da sombra",
+    "default": 22,
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "units": "%"
+  },
+  "cal-blur-radius": {
+    "type": "spinbutton",
+    "description": "Desfoque do vidro",
+    "default": 20,
+    "min": 0,
+    "max": 40,
+    "step": 1,
+    "units": "px",
+    "tooltip": "Só com o desfoque do vidro ligado."
+  },
+  "cal-refraction": {
+    "type": "spinbutton",
+    "description": "Faixa de refração do vidro",
+    "default": 10,
+    "min": 0,
+    "max": 30,
+    "step": 1,
+    "units": "px",
+    "tooltip": "Só com o desfoque do vidro ligado."
+  },
+  "cal-hover-ms": {
+    "type": "spinbutton",
+    "description": "Duração da ampliação",
+    "default": 200,
+    "min": 0,
+    "max": 1000,
+    "step": 10,
+    "units": "ms"
+  },
+  "cal-pointer-ms": {
+    "type": "spinbutton",
+    "description": "Suavização do ponteiro",
+    "default": 40,
+    "min": 0,
+    "max": 500,
+    "step": 5,
+    "units": "ms"
+  },
+  "cal-reorder-ms": {
+    "type": "spinbutton",
+    "description": "Duração de adicionar, remover e reordenar",
+    "default": 220,
+    "min": 0,
+    "max": 1000,
+    "step": 10,
+    "units": "ms"
+  },
+  "cal-reorder-power": {
+    "type": "combobox",
+    "description": "Curva de adicionar, remover e reordenar",
+    "default": 3,
+    "options": {
+      "Quadrática": 2,
+      "Cúbica": 3,
+      "Quártica": 4,
+      "Quíntica": 5
+    }
+  },
+  "cal-reveal-ms": {
+    "type": "spinbutton",
+    "description": "Duração de mostrar e ocultar",
+    "default": 260,
+    "min": 0,
+    "max": 1000,
+    "step": 10,
+    "units": "ms"
+  },
+  "cal-bounce-ms": {
+    "type": "spinbutton",
+    "description": "Duração de um quique",
+    "default": 600,
+    "min": 100,
+    "max": 2000,
+    "step": 20,
+    "units": "ms"
+  },
+  "cal-bounce-height": {
+    "type": "spinbutton",
+    "description": "Altura do quique",
+    "default": 50,
+    "min": 0,
+    "max": 150,
+    "step": 1,
+    "units": "%",
+    "tooltip": "Em relação ao tamanho do ícone."
   }
 }

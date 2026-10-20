@@ -144,7 +144,7 @@ class DockController {
             new DockView(monitor, position, scale, this._panelInset(monitor.index, position),
                 this.settings.autohide, this.settings.glassBlur,
                 { appearance: this.settings.iconAppearance, tint: this.settings.iconTint },
-                this.settings.tokenOverrides(), this));
+                this.settings.tuning(), this));
         this._updateViews();
     }
 

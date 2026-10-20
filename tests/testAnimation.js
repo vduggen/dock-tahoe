@@ -33,11 +33,11 @@ var tests = {
     },
 
     "easing is clamped and monotonic"(assert) {
-        assert.equal(Animation.easeOutCubic(-1), 0);
-        assert.equal(Animation.easeOutCubic(2), 1);
+        assert.equal(Animation.easeOut(-1, 3), 0);
+        assert.equal(Animation.easeOut(2, 3), 1);
         let previous = 0;
         for (let t = 0; t <= 1; t += 0.05) {
-            const value = Animation.easeOutCubic(t);
+            const value = Animation.easeOut(t, 3);
             assert.ok(value >= previous, "monotonic at " + t);
             previous = value;
         }
