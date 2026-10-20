@@ -25,13 +25,50 @@
     background-color: rgb(10, 132, 255);
 }
 
-.tahoe-tooltip {
-    padding: 4px 10px;
-    border-radius: 8px;
-    background-color: rgba(30, 30, 34, 0.82);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+/* Tooltip and menu bubbles (lib/bubble.js): the shape is painted in code
+ * from these colors; the arrow's room is padding set in code. */
+.tahoe-tooltip,
+.menu.tahoe-menu {
+    -bubble-fill: rgba(36, 36, 40, 0.92);
+    -bubble-border: rgba(255, 255, 255, 0.14);
+}
+
+.tahoe-tooltip-label {
+    padding: 4px 11px;
     color: rgba(255, 255, 255, 0.95);
     font-size: 13px;
+}
+
+/* The theme draws its own box on the content; the bubble replaces it. */
+.menu.tahoe-menu .popup-menu-content {
+    padding: 5px;
+    margin: 0;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    color: white;
+}
+
+.menu.tahoe-menu .popup-menu-item {
+    padding: 4px 10px;
+    border-radius: 7px;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 13px;
+}
+
+.menu.tahoe-menu .popup-menu-item:hover,
+.menu.tahoe-menu .popup-menu-item:active {
+    background-color: rgb(10, 132, 255);
+    color: white;
+}
+
+.menu.tahoe-menu .popup-separator-menu-item {
+    -gradient-height: 1px;
+    -gradient-start: rgba(255, 255, 255, 0.16);
+    -gradient-end: rgba(255, 255, 255, 0.16);
+    -margin-horizontal: 10px;
+    height: 1px;
+    margin: 3px 0;
 }
 
 /* Keyboard focus, as a ring. The button is drawn at icon.maxSize and scaled down, so the border shrinks
