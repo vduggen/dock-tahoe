@@ -102,6 +102,17 @@ var tests = {
         });
     },
 
+    "indicator keeps its gap from the dock edge"(assert) {
+        const tokens = Tokens.resolve();
+        Layout.POSITIONS.forEach(position => {
+            const placed = Layout.place(Layout.computeRest(KINDS, tokens, MONITOR, position, 52), null, null);
+            const center = placed.items[0].indicator.center;
+            const dot = { x: center.x - 2, y: center.y - 2, width: 4, height: 4 };
+            assert.near(edgeDistance(dot, position, MONITOR) - edgeDistance(placed.dock, position, MONITOR),
+                4, EPSILON, position);
+        });
+    },
+
     "too many icons shrink to fit the monitor"(assert) {
         const tokens = Tokens.resolve();
         const kinds = new Array(60).fill("icon");
