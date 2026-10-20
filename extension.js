@@ -163,6 +163,10 @@ class DockController {
         this.trash.open();
     }
 
+    emptyTrash() {
+        this.trash.confirmEmpty();
+    }
+
     openNewWindow(entry, monitorIndex) {
         if (!entry.app || !entry.windows.length) {
             this._launch(entry, monitorIndex);
