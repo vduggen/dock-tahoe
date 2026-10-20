@@ -53,8 +53,8 @@ var tests = {
         const tokens = Tokens.resolve();
         const rest = Layout.computeRest(KINDS, tokens, MONITOR, "bottom");
         assert.equal(rest.ratio, 1);
-        // 2·10 padding + 5·48 icons + 1 separator + 5·7 gaps
-        assert.equal(rest.length, 20 + 240 + 1 + 35);
+        // 2·8 padding + 5·48 icons + 1 separator + 5·7 gaps
+        assert.equal(rest.length, 16 + 240 + 1 + 35);
         const placed = Layout.place(rest, null, null);
         assert.near(placed.dock.x + placed.dock.width / 2, MONITOR.x + MONITOR.width / 2,
             EPSILON, "centered");

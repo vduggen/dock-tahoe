@@ -177,6 +177,11 @@ spec e precisam ser comparadas com gravações do Tahoe:
 - **Ampliação sem espaço:** quando não cabe, o excesso é reduzido
   uniformemente até caber na tela.
 
+## Desvios aprovados da spec
+
+- `dock.paddingX` = 8 (SPEC §2: 10), igual ao `paddingY`, para que os raios
+  concêntricos (`Layout.radii`) também valham nas pontas do dock.
+
 ## Notas de comportamento do Muffin
 
 - `demands-attention` só é aceito para janelas que não estão visíveis (por
