@@ -168,5 +168,18 @@ var tests = {
         assert.throws(() => Layout.computeRest(["button"], tokens, MONITOR, "bottom"), "kind");
         assert.throws(() => Layout.computeRest(["icon"], tokens,
             { x: 0, y: 0, width: 10, height: 10 }, "bottom"), "no room");
+    },
+
+    "sections split pinned, running and trash"(assert) {
+        const pinned = { pinned: true }, running = { pinned: false }, trash = { trash: true };
+        const shape = entries => {
+            const result = Layout.sections(entries);
+            return result.kinds.map(kind => kind === "icon" ? "i" : "|").join("") + " " + result.roles.join(",");
+        };
+        assert.equal(shape([pinned, pinned, running, trash]), "ii|i|i running,trash");
+        assert.equal(shape([pinned, pinned, trash]), "ii|i trash", "no running: only the trash line");
+        assert.equal(shape([running, trash]), "i|i trash", "no pinned: no running line");
+        assert.equal(shape([trash]), "i ", "trash alone");
+        assert.equal(shape([pinned, running]), "i|i running", "no trash");
     }
 };

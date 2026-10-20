@@ -10,6 +10,7 @@ const { AppTracker } = require("./lib/appTracker.js");
 const { DockSettings } = require("./lib/settings.js");
 const { DockView } = require("./lib/dockView.js");
 const { LauncherEntry } = require("./lib/launcherEntry.js");
+const { Trash } = require("./lib/trash.js");
 const Grouping = require("./lib/grouping.js");
 const Layout = require("./lib/layout.js");
 
@@ -42,6 +43,7 @@ class DockController {
             this._updateViews();
         });
         this.badges = new LauncherEntry(() => this._updateViews());
+        this.trash = new Trash(() => this._updateViews());
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
     }
 
@@ -55,6 +57,7 @@ class DockController {
         this._rebuildViews();
         this.tracker.enable();
         this.badges.enable();
+        this.trash.enable();
         this._bindHotkey();
     }
 
@@ -66,6 +69,7 @@ class DockController {
         Main.keybindingManager.removeHotKey(HOTKEY_NAME);
         this.tracker.disable();
         this.badges.disable();
+        this.trash.disable();
         this._signals.forEach(([object, id]) => object.disconnect(id));
         this._signals = [];
         this.views.forEach(view => view.destroy());
@@ -153,6 +157,10 @@ class DockController {
             window.unminimize();
         const workspace = window.get_workspace();
         Main.activateWindow(window, time, workspace ? workspace.index() : undefined);
+    }
+
+    openTrash() {
+        this.trash.open();
     }
 
     openNewWindow(entry, monitorIndex) {
@@ -245,6 +253,7 @@ class DockController {
                         badge: this.badges.label(item.desktopId)
                     }));
             });
+            entries.push(this.trash.entry());
             view.update(entries);
         });
     }
