@@ -224,6 +224,8 @@ class DockController {
 
     // Window-backed apps have no desktop file, so the menu never offers them.
     togglePin(entry) {
+        if (entry.permanent)
+            return;
         const pinned = this.settings.pinnedApps.slice();
         const index = pinned.indexOf(entry.desktopFileId);
         if (index >= 0)
@@ -362,6 +364,7 @@ class DockController {
     _updateViews() {
         const primary = Main.layoutManager.primaryIndex;
         const workspace = global.workspace_manager.get_active_workspace_index();
+        const fileManager = this._fileManagerId();
         this.views.forEach(view => {
             const index = view.monitor.index;
             const entries = [];
@@ -374,6 +377,8 @@ class DockController {
                     entries.push(Object.assign({}, item, {
                         facts: facts,
                         localWindows: Grouping.onMonitor(item, index),
+                        // The file manager stays, as Finder does in the macOS Dock.
+                        permanent: item.pinned && item.desktopFileId === fileManager,
                         badge: this.badges.label(item.desktopId)
                     }));
             });
