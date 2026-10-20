@@ -20,6 +20,30 @@
       "Direita": "right"
     }
   },
+  "icon-size": {
+    "type": "spinbutton",
+    "description": "Tamanho dos ícones",
+    "default": 48,
+    "min": 24,
+    "max": 96,
+    "step": 2,
+    "units": "px"
+  },
+  "magnification": {
+    "type": "switch",
+    "description": "Ampliar ícones sob o cursor",
+    "default": true
+  },
+  "magnification-size": {
+    "type": "spinbutton",
+    "description": "Tamanho máximo da ampliação",
+    "default": 72,
+    "min": 24,
+    "max": 128,
+    "step": 2,
+    "units": "px",
+    "dependency": "magnification"
+  },
   "autohide": {
     "type": "switch",
     "description": "Ocultar automaticamente",
