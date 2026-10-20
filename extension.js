@@ -3,6 +3,7 @@
 const Cinnamon = imports.gi.Cinnamon;
 const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
+const Meta = imports.gi.Meta;
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const { PanelLoc } = imports.ui.panel;
@@ -46,7 +47,7 @@ class DockController {
         this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
             this._snapshot = snapshot;
             this._updateViews();
-        });
+        }, window => this._aimMinimize(window));
         this.badges = new LauncherEntry(() => this._updateViews());
         this.trash = new Trash(() => this._updateViews());
         this._themeContext = St.ThemeContext.get_for_stage(global.stage);
@@ -231,6 +232,17 @@ class DockController {
             pinned.push(entry.desktopFileId);
         this.settings.setPinnedApps(pinned);
         this.tracker.reloadPinned();
+    }
+
+    // Cinnamon's minimize and unminimize animations head for the window's
+    // icon geometry, which the panel's window list also sets, on whatever
+    // monitor the panel is. Set right before the animation, it is the icon
+    // in the dock of the window's own monitor.
+    _aimMinimize(window) {
+        const view = this.views.find(candidate => candidate.monitor.index === window.get_monitor());
+        const rect = view && view.iconRect(window);
+        if (rect)
+            window.set_icon_geometry(new Meta.Rectangle(rect));
     }
 
     // shown: the pinned desktop ids in their new dock order.
