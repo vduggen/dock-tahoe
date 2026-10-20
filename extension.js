@@ -244,8 +244,7 @@ class DockController {
     // For the default file manager: its home folder and the GTK bookmarks
     // (its sidebar favorites), as [{ uri, name }]; null for other apps.
     folderShortcuts(entry) {
-        const manager = Gio.AppInfo.get_default_for_type("inode/directory", false);
-        if (!manager || !entry.desktopFileId || manager.get_id() !== entry.desktopFileId)
+        if (!entry.desktopFileId || this._fileManagerId() !== entry.desktopFileId)
             return null;
         const shortcuts = [{ uri: Gio.File.new_for_path(GLib.get_home_dir()).get_uri(), name: "Pasta pessoal" }];
         try {
@@ -314,6 +313,22 @@ class DockController {
     // on it; running apps without any window go to the primary monitor.
     // With current-workspace-only, windows on other workspaces don't count,
     // for the dots, clicks and menus alike.
+    // The trash as a grouping item: the file manager's windows titled after it.
+    _trashItem() {
+        const manager = this._fileManagerId();
+        const windows = [];
+        if (manager && this.trash.title)
+            this._snapshot.items.filter(item => item.desktopFileId === manager).forEach(item =>
+                windows.push(...item.windows.filter(window =>
+                    window.metaWindow && window.metaWindow.get_title() === this.trash.title)));
+        return { pinned: true, running: windows.length > 0, windows: windows };
+    }
+
+    _fileManagerId() {
+        const manager = Gio.AppInfo.get_default_for_type("inode/directory", false);
+        return manager ? manager.get_id() : null;
+    }
+
     _updateViews() {
         const primary = Main.layoutManager.primaryIndex;
         const workspace = global.workspace_manager.get_active_workspace_index();
@@ -331,7 +346,9 @@ class DockController {
                         badge: this.badges.label(item.desktopId)
                     }));
             });
-            entries.push(this.trash.entry());
+            const trash = this._trashItem();
+            const shown = this.settings.currentWorkspaceOnly ? Grouping.onWorkspace(trash, workspace) : trash;
+            entries.push(this.trash.entry(shown.windows, Grouping.facts(shown, index)));
             view.update(entries);
         });
     }
