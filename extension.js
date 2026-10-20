@@ -30,6 +30,9 @@ class DockController {
         this._rebuildId = 0;
         // { app, monitor, until }: where the next window of a launch goes.
         this._placement = null;
+        // A preview being hovered: the window focused before it, and the
+        // window it unminimized, if any.
+        this._peek = null;
         this.settings = new DockSettings(metadata.uuid, {
             pinnedApps: () => this.tracker.reloadPinned(),
             position: () => this._rebuildViews(),
@@ -62,6 +65,7 @@ class DockController {
     }
 
     disable() {
+        this.endPeek(null);
         if (this._rebuildId) {
             GLib.source_remove(this._rebuildId);
             this._rebuildId = 0;
@@ -159,11 +163,43 @@ class DockController {
         Main.activateWindow(window, time, workspace ? workspace.index() : undefined);
     }
 
-    // A hovered preview: focus without leaving the current workspace.
-    focusWindow(window) {
+    // A hovered preview brings its window forward, only for a look: endPeek()
+    // puts things back. Never leaves the current workspace.
+    peekWindow(window) {
         const workspace = window.get_workspace();
-        if (window.is_on_all_workspaces() || workspace === global.workspace_manager.get_active_workspace())
-            this.activateWindow(window);
+        if (!window.is_on_all_workspaces() && workspace !== global.workspace_manager.get_active_workspace())
+            return;
+        if (!this._peek)
+            this._peek = { previous: global.display.get_focus_window(), unminimized: null };
+        this._unpeekMinimized(window);
+        if (window.minimized)
+            this._peek.unminimized = window;
+        this.activateWindow(window);
+    }
+
+    // kept: the window chosen with a click, which stays; otherwise the
+    // previously focused window comes back.
+    endPeek(kept) {
+        const peek = this._peek;
+        if (!peek)
+            return;
+        this._peek = null;
+        if (peek.unminimized && peek.unminimized !== kept)
+            peek.unminimized.minimize();
+        if (kept)
+            return;
+        if (peek.previous && peek.previous.get_compositor_private() && !peek.previous.minimized)
+            this.activateWindow(peek.previous);
+        else if (global.display.get_focus_window())
+            global.display.get_focus_window().lower();
+    }
+
+    _unpeekMinimized(next) {
+        const unminimized = this._peek.unminimized;
+        if (unminimized && unminimized !== next) {
+            unminimized.minimize();
+            this._peek.unminimized = null;
+        }
     }
 
     openTrash() {
