@@ -21,6 +21,38 @@ function keys(items) {
 }
 
 var tests = {
+    "an unpinned web app keeps its own item beside the pinned browser"(assert) {
+        const pinned = [{ desktopId: "google-chrome.desktop", wmClasses: ["google-chrome"] }];
+        const items = Grouping.group(pinned, [
+            win({ appId: "google-chrome.desktop", wmClasses: ["Google-chrome", "google-chrome"] }),
+            win({ appId: "chrome-wa-Default.desktop", wmClasses: ["Google-chrome", "crx_wa"] })
+        ]);
+        assert.equal(keys(items), "pinned:google-chrome,running:chrome-wa-default");
+        assert.equal(items[0].windows.length, 1, "browser keeps only its window");
+    },
+
+    "a web app credited to the browser goes to the launcher of its WM_CLASS"(assert) {
+        const launchers = [
+            { desktopId: "google-chrome.desktop", wmClass: "google-chrome" },
+            { desktopId: "chrome-wa-Default.desktop", wmClass: "crx_wa" }
+        ];
+        const items = Grouping.group([], [
+            win({ appId: "google-chrome.desktop", wmClasses: ["Google-chrome", "crx_wa"] }),
+            win({ appId: "google-chrome.desktop", wmClasses: ["Google-chrome", "google-chrome"] })
+        ], [], launchers);
+        assert.equal(keys(items), "running:chrome-wa-default,running:google-chrome");
+        assert.equal(items[0].desktopId, "chrome-wa-default");
+    },
+
+    "the chosen app wins when it claims the class too"(assert) {
+        const launchers = [
+            { desktopId: "a.desktop", wmClass: "shared" },
+            { desktopId: "b.desktop", wmClass: "shared" }
+        ];
+        const items = Grouping.group([], [win({ appId: "b.desktop", wmClasses: ["shared"] })], [], launchers);
+        assert.equal(keys(items), "running:b");
+    },
+
     "pinned items keep their order with or without windows"(assert) {
         const items = Grouping.group(PINNED, []);
         assert.equal(keys(items),
