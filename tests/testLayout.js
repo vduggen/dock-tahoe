@@ -92,6 +92,16 @@ var tests = {
         assert.near(left.dock.y + left.dock.height / 2, MONITOR.height / 2, EPSILON, "centered");
     },
 
+    "edge inset lifts the dock above a panel"(assert) {
+        const tokens = Tokens.resolve();
+        Layout.POSITIONS.forEach(position => {
+            const rest = Layout.computeRest(KINDS, tokens, MONITOR, position, 52);
+            const placed = Layout.place(rest, null, null);
+            assert.equal(edgeDistance(placed.dock, position, MONITOR), 52 + 5, position);
+            checkIntegrity(assert, placed, MONITOR, position + " inset");
+        });
+    },
+
     "too many icons shrink to fit the monitor"(assert) {
         const tokens = Tokens.resolve();
         const kinds = new Array(60).fill("icon");
