@@ -128,13 +128,27 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 - Reserva de strut; o dock flutua acima dos painéis fixos da mesma borda e
   some apenas no monitor em tela cheia.
 
-### Etapa 4 — P1: movimento
+### Etapa 4 — P1: movimento ✅
 
-- Ampliação contínua ligada ao `motion-event` da cápsula, com suavização por
-  frame (`Clutter.Timeline` ou `ease`), sem saltos em movimento rápido.
-- Bounce de abertura e de atenção; entrada e saída de itens; auto-ocultação
-  com zona de gatilho na borda.
-- Preferência de reduzir animações (`org.cinnamon` / `desktop-effects`).
+- `lib/animation.js` (puro, testado): aproximação exponencial independente
+  da taxa de quadros, curva do bounce e easing; durações iniciais da §6 em
+  `TIMING`.
+- Um `Clutter.Timeline` por dock, ligado só enquanto algo se move. Eventos
+  de ponteiro no dock o acordam; cada quadro lê o ponteiro, suaviza a
+  ampliação (200 ms) e o ponteiro (40 ms) e reaplica o layout. A região de
+  entrada cresce para cobrir os ícones ampliados; um menu aberto congela a
+  ampliação.
+- Bounce: na abertura, até a primeira janela (termina o pulo em andamento,
+  limite de 10 s); no pedido de atenção, 3 pulos.
+- Entrada e saída de itens: quem fica desliza da posição antiga, quem entra
+  cresce no lugar e quem sai encolhe antes de ser destruído (220 ms).
+- Auto-ocultação (`autohide`): sem strut, o dock desliza para fora da borda
+  e volta quando o ponteiro toca uma faixa de 2 px ao longo dele; some
+  300 ms depois que ponteiro, menu ou modo teclado saem.
+- Configurações da §9: tamanho dos ícones, ampliação ligada/desligada e
+  tamanho máximo. Os espaçamentos escalam com o tamanho do ícone.
+- Reduzir animações: segue `Main.animations_enabled` (efeitos do Cinnamon);
+  sem ele tudo salta direto para o destino e não há bounce.
 
 ### Etapa 5 — P1: conteúdo e drag-and-drop
 
@@ -203,6 +217,15 @@ spec e precisam ser comparadas com gravações do Tahoe:
 - `Meta.Window.unminimize()` não recebe timestamp no Muffin 6.6.
 
 ## Notas da API do Cinnamon
+
+- O Muffin do Cinnamon 6.6 usa o `Clutter.Timeline` antigo, sem a
+  propriedade `actor`; `get_delta()` dá o intervalo do quadro.
+- As regiões de entrada do chrome usam `get_transformed_position()`, mas
+  só são recalculadas em `notify::allocation`/`notify::visible`; mexer só em
+  `translation_*` não atualiza a região.
+- Com a tela bloqueada, o protetor de tela recebe os eventos de ponteiro e
+  cobre as capturas; os testes ao vivo leem a geometria via `Eval` e chamam
+  `_wake()` à mão.
 
 - `PopupMenu` com `St.Side.BOTTOM` encosta o menu na base da tela, como num
   painel. O `DockMenu` reposiciona o menu além da cápsula.
