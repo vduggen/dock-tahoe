@@ -249,7 +249,9 @@ spec e precisam ser comparadas com gravações do Tahoe:
    precisa acompanhar o retângulo ampliado.
 4. **Badges.** O Linux não tem uma API única de badge. Candidatos:
    `com.canonical.Unity.LauncherEntry` (D-Bus) e contagem de notificações por
-   app. Fica para a etapa 5 ou 6.
+   app. ✅ LauncherEntry implementado (`lib/badges.js`, `lib/launcherEntry.js`);
+   a contagem por notificações do Cinnamon fica em aberto (o `messageTray`
+   não emite sinal de fonte nova, exigiria monkey-patch).
 5. **Wayland.** O Cinnamon no Wayland ainda é experimental. Struts, input
    region e foco precisam de validação própria; não fazem parte do escopo até
    a etapa 7.
