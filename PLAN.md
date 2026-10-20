@@ -181,6 +181,9 @@ spec e precisam ser comparadas com gravações do Tahoe:
 
 - `dock.paddingX` = 8 (SPEC §2: 10), igual ao `paddingY`, para que os raios
   concêntricos (`Layout.radii`) também valham nas pontas do dock.
+- `icon.gap` = 8 (SPEC §2: 7), igual ao padding: cada ícone tem o mesmo
+  espaço em todos os lados, e o destaque do app em foco fica a
+  `padding − highlight.inset` (4) da borda, dos vizinhos e do separador.
 
 ## Notas de comportamento do Muffin
 

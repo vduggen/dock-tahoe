@@ -24,7 +24,8 @@ function centerX(rect) {
 }
 
 function under(placed, x) {
-    return iconsOf(placed).findIndex(icon => x >= icon.rect.x && x < icon.rect.x + icon.rect.width);
+    return iconsOf(placed).findIndex(icon =>
+        x >= icon.rect.x - EPSILON && x < icon.rect.x + icon.rect.width - EPSILON);
 }
 
 function checkIntegrity(assert, placed, label) {

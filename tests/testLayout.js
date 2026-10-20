@@ -53,11 +53,11 @@ var tests = {
         const tokens = Tokens.resolve();
         const rest = Layout.computeRest(KINDS, tokens, MONITOR, "bottom");
         assert.equal(rest.ratio, 1);
-        // 2·8 padding + 5·48 icons + 1 separator + 5·7 gaps
-        assert.equal(rest.length, 16 + 240 + 1 + 35);
+        // 2·8 padding + 5·48 icons + 1 separator + 5·8 gaps
+        assert.equal(rest.length, 16 + 240 + 1 + 40);
         const placed = Layout.place(rest, null, null);
         assert.near(placed.dock.x + placed.dock.width / 2, MONITOR.x + MONITOR.width / 2,
-            EPSILON, "centered");
+            0.5, "centered within half a pixel");
         assert.equal(placed.dock.height, 48 + 16);
         assert.equal(edgeDistance(placed.dock, "bottom", MONITOR), 5);
         checkIntegrity(assert, placed, MONITOR, "rest");
@@ -89,7 +89,7 @@ var tests = {
         const right = Layout.place(Layout.computeRest(KINDS, tokens, MONITOR, "right"), null, null);
         assert.equal(left.dock.x, MONITOR.x + 5);
         assert.equal(right.dock.x + right.dock.width, MONITOR.x + MONITOR.width - 5);
-        assert.near(left.dock.y + left.dock.height / 2, MONITOR.height / 2, EPSILON, "centered");
+        assert.near(left.dock.y + left.dock.height / 2, MONITOR.height / 2, 0.5, "centered within half a pixel");
     },
 
     "edge inset lifts the dock above a panel"(assert) {
@@ -111,6 +111,19 @@ var tests = {
             assert.near(edgeDistance(dot, position, MONITOR) - edgeDistance(placed.dock, position, MONITOR),
                 4, EPSILON, position);
         });
+    },
+
+    "spacing is uniform around icons and the focused highlight"(assert) {
+        const tokens = Tokens.resolve();
+        const placed = Layout.place(Layout.computeRest(["icon", "icon", "icon"], tokens, MONITOR, "bottom"), null, null);
+        const [a, b, c] = placed.items.map(item => item.rect);
+        const dock = placed.dock;
+        const gaps = [a.x - dock.x, b.x - (a.x + a.width), c.x - (b.x + b.width),
+            dock.x + dock.width - (c.x + c.width), a.y - dock.y, dock.y + dock.height - (a.y + a.height)];
+        gaps.forEach((gap, index) => assert.near(gap, 8, EPSILON, "gap " + index));
+        // Highlight on the middle icon: same space to its neighbors and the edge.
+        const inset = tokens["highlight.inset"];
+        assert.near(b.x - inset - (a.x + a.width), b.y - inset - dock.y, EPSILON, "neighbor = edge");
     },
 
     "corner radii are concentric"(assert) {
