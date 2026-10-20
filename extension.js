@@ -21,6 +21,8 @@ const PANEL_KEYS = ["panels-enabled", "panels-height", "panels-autohide"];
 const HOTKEY_NAME = "tahoe-dock-focus";
 // How long a launch waits for its window to move it to the dock's monitor.
 const PLACEMENT_TIMEOUT_MS = 10000;
+// Recent apps shown at most (SPEC §1).
+const MAX_RECENT = 3;
 
 let _metadata = null;
 let _controller = null;
@@ -30,6 +32,8 @@ class DockController {
         this.views = [];
         this._signals = [];
         this._snapshot = { items: [] };
+        // Unpinned apps running at the last snapshot; null before the first.
+        this._running = null;
         this._rebuildId = 0;
         // { app, monitor, until }: where the next window of a launch goes.
         this._placement = null;
@@ -42,10 +46,12 @@ class DockController {
             focusHotkey: () => this._bindHotkey(),
             autohide: () => this._rebuildViews(),
             appearance: () => this._rebuildViews(),
-            workspaces: () => this._updateViews()
+            workspaces: () => this._updateViews(),
+            recent: () => this._updateViews()
         });
         this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
             this._snapshot = snapshot;
+            this._noteRecent(snapshot.items);
             this._updateViews();
         }, window => this._aimMinimize(window));
         this.badges = new LauncherEntry(() => this._updateViews());
@@ -370,6 +376,47 @@ class DockController {
         return { pinned: true, running: windows.length > 0, windows: windows };
     }
 
+    // Unpinned apps that stopped running since the last snapshot become
+    // recent; the first snapshot only sets what was already running.
+    _noteRecent(items) {
+        const running = items.filter(item => !item.pinned && item.running && item.desktopFileId)
+            .map(item => item.desktopFileId);
+        if (this._running) {
+            const saved = this.settings.recentApps;
+            const recent = Grouping.recentApps(saved, this._running, running, this.settings.pinnedApps, MAX_RECENT);
+            if (recent.join() !== saved.join())
+                this.settings.setRecentApps(recent);
+        }
+        this._running = running;
+    }
+
+    removeRecent(entry) {
+        const id = Grouping.normalizeId(entry.desktopFileId);
+        this.settings.setRecentApps(this.settings.recentApps.filter(saved => Grouping.normalizeId(saved) !== id));
+        this._updateViews();
+    }
+
+    // Recent apps as dock entries: launchers with no windows.
+    _recentEntries() {
+        if (!this.settings.showRecentApps)
+            return [];
+        const appSystem = Cinnamon.AppSystem.get_default();
+        return this.settings.recentApps.map(id => appSystem.lookup_app(id)).filter(Boolean).map(app => ({
+            key: "recent:" + Grouping.normalizeId(app.get_id()),
+            pinned: false,
+            recent: true,
+            running: false,
+            desktopFileId: app.get_id(),
+            app: app,
+            info: app.get_app_info(),
+            name: app.get_name(),
+            windows: [],
+            localWindows: [],
+            facts: { pinned: false, running: false, hasWindows: false, focused: false, minimized: false, attention: false },
+            badge: null
+        }));
+    }
+
     _fileManagerId() {
         const manager = Gio.AppInfo.get_default_for_type("inode/directory", false);
         return manager ? manager.get_id() : null;
@@ -396,6 +443,7 @@ class DockController {
                         badge: this.badges.label(item.desktopId)
                     }));
             });
+            entries.push(...this._recentEntries());
             const trash = this._trashItem();
             const shown = this.settings.currentWorkspaceOnly ? Grouping.onWorkspace(trash, workspace) : trash;
             entries.push(Object.assign(this.trash.entry(shown.windows, Grouping.facts(shown, index)),

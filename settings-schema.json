@@ -10,6 +10,10 @@
       "chrome-pommaclcbfghclhalboakcipcmmndhcj-Profile_3.desktop"
     ]
   },
+  "recent-apps": {
+    "type": "generic",
+    "default": []
+  },
   "position": {
     "type": "combobox",
     "description": "Posição na tela",
@@ -54,6 +58,12 @@
     "description": "Mostrar apenas apps da área de trabalho atual",
     "tooltip": "Desligado, como no macOS, o Dock mostra os apps de todas as áreas de trabalho.",
     "default": false
+  },
+  "show-recent-apps": {
+    "type": "switch",
+    "description": "Mostrar apps recentes",
+    "tooltip": "Até 3 apps não fixados fechados há pouco, depois dos apps abertos.",
+    "default": true
   },
   "focus-hotkey": {
     "type": "keybinding",

@@ -21,6 +21,17 @@ function keys(items) {
 }
 
 var tests = {
+    "recent apps: closed ones first, without running or pinned ones, at most max"(assert) {
+        const recent = (saved, before, after, pinned) =>
+            Grouping.recentApps(saved, before, after, pinned || [], 3).join();
+        assert.equal(recent(["a.desktop"], ["b.desktop", "c.desktop"], ["c.desktop"]), "b.desktop,a.desktop");
+        assert.equal(recent([], ["a.desktop", "b.desktop"], []), "b.desktop,a.desktop", "last launched first");
+        assert.equal(recent(["a.desktop", "b.desktop"], [], ["a.desktop"]), "b.desktop", "running again");
+        assert.equal(recent(["a.desktop", "b.desktop"], [], [], ["B.desktop"]), "a.desktop", "pinned");
+        assert.equal(recent(["b.desktop", "c.desktop", "d.desktop"], ["a.desktop", "b.desktop"], []),
+            "b.desktop,a.desktop,c.desktop", "deduplicated and capped");
+    },
+
     "a reorder keeps saved ids the dock does not show"(assert) {
         const saved = ["a.desktop", "gone.desktop", "b.desktop", "c.desktop"];
         assert.equal(Grouping.reorderPinned(saved, ["c.desktop", "a.desktop", "b.desktop"]).join(),

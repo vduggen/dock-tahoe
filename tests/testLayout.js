@@ -181,6 +181,7 @@ var tests = {
 
     "sections split pinned, running and trash"(assert) {
         const pinned = { pinned: true }, running = { pinned: false }, trash = { trash: true };
+        const recent = { pinned: false, recent: true };
         const shape = entries => {
             const result = Layout.sections(entries);
             return result.kinds.map(kind => kind === "icon" ? "i" : "|").join("") + " " + result.roles.join(",");
@@ -190,6 +191,8 @@ var tests = {
         assert.equal(shape([running, trash]), "i|i trash", "no pinned: no running line");
         assert.equal(shape([trash]), "i ", "trash alone");
         assert.equal(shape([pinned, running]), "i|i running", "no trash");
+        assert.equal(shape([pinned, running, recent, trash]), "i|i|i|i running,recent,trash");
+        assert.equal(shape([pinned, recent, recent, trash]), "i|ii|i recent,trash", "no running");
     },
 
     "thumbnails keep their aspect, centered and never enlarged"(assert) {

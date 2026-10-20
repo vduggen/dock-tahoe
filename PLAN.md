@@ -152,11 +152,19 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 
 ### Etapa 5 — P1: conteúdo e drag-and-drop
 
-- Grupos: recentes (até 3), minimizadas separadas (opcional), pastas e lixeira
-  (`Gio.FileMonitor`), com confirmação ao esvaziar a lixeira.
-- DnD: reordenar, fixar ao soltar `.desktop`, remover ao arrastar para fora,
-  encaminhar arquivo ao app.
-- Pilhas de pasta: leque, grade e lista.
+- ✅ Lixeira (`Gio.FileMonitor`), com confirmação ao esvaziar.
+- ✅ Recentes: até 3 apps não fixados fechados há pouco, depois dos abertos
+  e com linha própria; persistidos em `recent-apps`, desligáveis em
+  `show-recent-apps`. Saem ao reabrir ou fixar.
+- ✅ DnD: reordenar fixados; fixar ao soltar um app (aberto, recente, de
+  outro dock ou do menu do Cinnamon); desafixar ao soltar longe do dock ou
+  depois do último fixado.
+- Adiado: encaminhar arquivo ao app e fixar `.desktop` vindo do Nemo. O
+  Cinnamon só repassa ao chrome o hover de arrastos XDND
+  (`ui/xdndHandler.js`), sem os URIs nem o soltar; exigiria uma janela X
+  auxiliar sobre o dock durante o arrasto.
+- Minimizadas separadas (opcional).
+- Pastas e pilhas: leque, grade e lista.
 
 ### Etapa 6 — P2: vidro e acabamento
 
