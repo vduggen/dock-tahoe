@@ -179,6 +179,19 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 - Prova de conceito antes de qualquer outra coisa nesta etapa:
   `St.BackgroundBlurEffect` na cápsula, medindo FPS durante hover contínuo
   (meta: ≥ 55 FPS em 60 Hz, §10).
+  - ✅ Feita em 2026-10-20 (Cinnamon 6.6.9, X11, 60 Hz; base 59–60 FPS
+    com hover varrendo o dock por 3 s):
+    - `St.BackgroundBlurEffect` (CSS `background-blur: Npx`) **reprovado**:
+      faz N leituras da tela pela CPU por quadro; 54 FPS com 2px, 40 com
+      6px, 24 com 20px. Também fica preso no widget depois que o estilo
+      sai.
+    - `Clutter.ShaderEffect` (blur em uma passada) sobre um `Clutter.Clone`
+      de `global.background_actor` **aprovado**: 54–57 FPS com raio 30 e
+      59 com raio 10, desde que o ator tenha tamanho fixo (redimensionar a
+      cada quadro recria a textura fora da tela e cai para ~36 FPS).
+    - Limites: clonar `global.window_group` não pinta nada (sem volume de
+      pintura), então o vidro borra só o papel de parede, não janelas
+      atrás do dock. Faltam a máscara dos cantos e um kernel sem listras.
 - Se passar: `Clutter.ShaderEffect` para refração, tint por luminância do
   backdrop, contorno e reflexos especulares. Se não passar: fallback com blur
   simples + gradiente + contorno (§3, "aparência simplificada").
