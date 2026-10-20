@@ -1,5 +1,6 @@
 // Dock Tahoe — entry points called by Cinnamon's extension system.
 
+const Cinnamon = imports.gi.Cinnamon;
 const GLib = imports.gi.GLib;
 const St = imports.gi.St;
 const Main = imports.ui.main;
@@ -14,6 +15,8 @@ const Layout = require("./lib/layout.js");
 
 const PANEL_KEYS = ["panels-enabled", "panels-height", "panels-autohide"];
 const HOTKEY_NAME = "tahoe-dock-focus";
+// How long a launch waits for its window to move it to the dock's monitor.
+const PLACEMENT_TIMEOUT_MS = 10000;
 
 let _metadata = null;
 let _controller = null;
@@ -24,6 +27,8 @@ class DockController {
         this._signals = [];
         this._snapshot = { items: [] };
         this._rebuildId = 0;
+        // { app, monitor, until }: where the next window of a launch goes.
+        this._placement = null;
         this.settings = new DockSettings(metadata.uuid, {
             pinnedApps: () => this.tracker.reloadPinned(),
             position: () => this._rebuildViews(),
@@ -43,6 +48,8 @@ class DockController {
     enable() {
         this._connect(Main.layoutManager, "monitors-changed", () => this._rebuildViews());
         this._connect(this._themeContext, "notify::scale-factor", () => this._rebuildViews());
+        // "map" comes after Muffin's placement, so the move sticks.
+        this._connect(global.window_manager, "map", (wm, actor) => this._placeNewWindow(actor.meta_window));
         PANEL_KEYS.forEach(key =>
             this._connect(global.settings, "changed::" + key, () => this._queueRebuild()));
         this._rebuildViews();
@@ -117,16 +124,18 @@ class DockController {
     }
 
     // SPEC §7: launch when there is no window; otherwise bring forward the
-    // most recently used window, preferring this monitor. Departs from §7 on
-    // request: clicking the focused app minimizes its windows, as a toggle.
+    // most recently used window on this monitor. Departs from §7 on request:
+    // clicking the focused app minimizes its windows, as a toggle, and an app
+    // whose windows are all on other monitors opens a new one here (_launch).
+    // Window-backed apps can't open windows, so they still switch.
     activate(entry, monitorIndex) {
         const local = entry.windows.filter(window => window.monitor === monitorIndex);
-        const candidates = (local.length ? local : entry.windows)
+        const candidates = (local.length || entry.desktopFileId ? local : entry.windows)
             .map(window => window.metaWindow)
             .filter(Boolean)
             .sort((a, b) => b.get_user_time() - a.get_user_time());
         if (!candidates.length) {
-            this._launch(entry);
+            this._launch(entry, monitorIndex);
             return;
         }
 
@@ -146,11 +155,13 @@ class DockController {
         Main.activateWindow(window, time, workspace ? workspace.index() : undefined);
     }
 
-    openNewWindow(entry) {
-        if (entry.app && entry.windows.length)
-            entry.app.open_new_window(-1);
-        else
-            this._launch(entry);
+    openNewWindow(entry, monitorIndex) {
+        if (!entry.app || !entry.windows.length) {
+            this._launch(entry, monitorIndex);
+            return;
+        }
+        this._expectWindow(entry, monitorIndex);
+        entry.app.open_new_window(-1);
     }
 
     // Window-backed apps have no desktop file, so the menu never offers them.
@@ -173,10 +184,11 @@ class DockController {
         });
     }
 
-    _launch(entry) {
+    _launch(entry, monitorIndex) {
+        this._expectWindow(entry, monitorIndex);
         try {
-            // Windows on other workspaces only (current-workspace-only):
-            // a new window here, instead of activate() switching away.
+            // Windows only on other monitors or workspaces: a new window
+            // here, instead of activate() switching away.
             if (entry.app && entry.app.get_windows().length)
                 entry.app.open_new_window(-1);
             else if (entry.app)
@@ -186,6 +198,30 @@ class DockController {
         } catch (e) {
             global.logError(e, "Dock Tahoe: falha ao abrir " + entry.name);
         }
+    }
+
+    // Muffin places new windows by focus, not by where the dock was clicked.
+    _expectWindow(entry, monitorIndex) {
+        this._placement = entry.app && monitorIndex !== undefined ? {
+            app: entry.app,
+            monitor: monitorIndex,
+            until: GLib.get_monotonic_time() / 1000 + PLACEMENT_TIMEOUT_MS
+        } : null;
+    }
+
+    _placeNewWindow(window) {
+        const placement = this._placement;
+        if (!placement || !window)
+            return;
+        if (GLib.get_monotonic_time() / 1000 > placement.until) {
+            this._placement = null;
+            return;
+        }
+        if (Cinnamon.WindowTracker.get_default().get_window_app(window) !== placement.app)
+            return;
+        this._placement = null;
+        if (window.get_monitor() !== placement.monitor)
+            window.move_to_monitor(placement.monitor);
     }
 
     // Each monitor shows the pinned apps plus the unpinned apps with windows
