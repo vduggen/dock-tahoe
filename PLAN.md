@@ -200,9 +200,13 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   área de trabalho atual encosta no dock (checagem a cada 250 ms). Hover a
   56–60 FPS. O ator interno precisa recortar os filhos: sem isso o efeito
   desenha o fundo inteiro e cai para ~33 FPS.
-- Se passar: `Clutter.ShaderEffect` para refração, tint por luminância do
-  backdrop, contorno e reflexos especulares. Se não passar: fallback com blur
-  simples + gradiente + contorno (§3, "aparência simplificada").
+- ✅ Material na última passada do mesmo shader (só com `glass-blur`):
+  refração (o fundo se curva para dentro numa faixa de
+  `glass.refraction` px junto à borda), tint por luminância (clareia fundo
+  escuro, escurece fundo claro, satura um pouco), contorno que contrasta
+  com o fundo e reflexo especular nas bordas voltadas para cima. Hover a
+  59–60 FPS. Sem `glass-blur`, fica o vidro simples do CSS (§3,
+  "aparência simplificada").
 - Variantes de ícone (clara, escura, tonalizada, clear) via efeitos de cor.
 - Modo de calibração (§9) escondido atrás de uma chave de desenvolvimento.
 
@@ -217,9 +221,11 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 Decisões da Etapa 1 (`lib/layout.js`, `lib/magnification.js`) que não vêm da
 spec e precisam ser comparadas com gravações do Tahoe:
 
-- **Âncora da ampliação:** o ponto sob o cursor fica fixo e os vizinhos são
-  empurrados para os dois lados; perto das bordas da tela, o dock inteiro é
-  deslocado para não sair dela.
+- **Âncora da ampliação:** o dock cresce para longe do cursor na proporção
+  de onde ele está (tudo para a direita na ponta esquerda, igual nos dois
+  lados no meio), então as pontas não balançam a cada ícone; perto da borda
+  de um ícone o cursor pode cair no vão ao lado. Perto das bordas da tela, o
+  dock inteiro é deslocado para não sair dela.
 - **Cápsula:** cresce no eixo principal junto com os ícones, mas mantém a
   altura de repouso; os ícones ampliados sobem além dela.
 - **Alcance:** token `magnification.sigma` = 60, cerca de um slot de ícone.
