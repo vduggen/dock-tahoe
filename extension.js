@@ -142,7 +142,9 @@ class DockController {
             : "bottom";
         this.views = Main.layoutManager.monitors.map(monitor =>
             new DockView(monitor, position, scale, this._panelInset(monitor.index, position),
-                this.settings.autohide, this.settings.glassBlur, this.settings.tokenOverrides(), this));
+                this.settings.autohide, this.settings.glassBlur,
+                { appearance: this.settings.iconAppearance, tint: this.settings.iconTint },
+                this.settings.tokenOverrides(), this));
         this._updateViews();
     }
 

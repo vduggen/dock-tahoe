@@ -207,7 +207,11 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   com o fundo e reflexo especular nas bordas voltadas para cima. Hover a
   59–60 FPS. Sem `glass-blur`, fica o vidro simples do CSS (§3,
   "aparência simplificada").
-- Variantes de ícone (clara, escura, tonalizada, clear) via efeitos de cor.
+- ✅ Aparência dos ícones (`icon-appearance`, `lib/iconAppearance.js`):
+  padrão, clara, escura, tonalizada (cor em `icon-tint`) e transparente,
+  por um `Clutter.ShaderEffect` no ícone original, sem máscara. Escura
+  escurece só as áreas claras e sem cor; tonalizada mapeia a luminância na
+  cor escolhida. Hover a 60 FPS com todos os ícones na escura.
 - Modo de calibração (§9) escondido atrás de uma chave de desenvolvimento.
 
 ### Etapa 7 — Validação

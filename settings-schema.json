@@ -48,6 +48,24 @@
     "units": "px",
     "dependency": "magnification"
   },
+  "icon-appearance": {
+    "type": "combobox",
+    "description": "Aparência dos ícones",
+    "default": "default",
+    "options": {
+      "Padrão": "default",
+      "Clara": "light",
+      "Escura": "dark",
+      "Tonalizada": "tinted",
+      "Transparente": "clear"
+    }
+  },
+  "icon-tint": {
+    "type": "colorchooser",
+    "description": "Cor dos ícones tonalizados",
+    "default": "rgb(10,132,255)",
+    "dependency": "icon-appearance=tinted"
+  },
   "glass-blur": {
     "type": "switch",
     "description": "Desfocar o fundo do vidro (experimental)",
