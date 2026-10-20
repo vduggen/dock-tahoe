@@ -98,6 +98,17 @@ class DockController {
         });
     }
 
+    // Keyboard focus leaving `view` past one end: on to the next dock in
+    // screen order (left to right, then top to bottom), wrapping around;
+    // entered from its first icon going forward, its last going back.
+    keyboardStep(view, step) {
+        const views = this.views.filter(candidate => candidate === view || candidate._order.length)
+            .sort((a, b) => a.monitor.x - b.monitor.x || a.monitor.y - b.monitor.y);
+        const target = views[(views.indexOf(view) + step + views.length) % views.length];
+        view.endKeyboard();
+        target.beginKeyboard(step < 0);
+    }
+
     // Panels resize after their settings change; wait for that to settle.
     _queueRebuild() {
         if (this._rebuildId)
