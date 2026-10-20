@@ -47,8 +47,8 @@ Enquanto não está no [Cinnamon Spices](https://cinnamon-spices.linuxmint.com/e
 instale a partir do código:
 
 ```sh
-git clone https://github.com/vduggen/tahoe-dock.git
-cd tahoe-dock
+git clone https://github.com/vduggen/dock-tahoe.git
+cd dock-tahoe
 ./scripts/install.sh
 ```
 
@@ -58,7 +58,7 @@ você usa um painel inferior com lista de janelas, o dock flutua acima dele;
 para o visual completo, mova ou oculte o painel.
 
 Para remover, desative a extensão e apague o link
-`~/.local/share/cinnamon/extensions/tahoe-dock@vduggen`.
+`~/.local/share/cinnamon/extensions/dock-tahoe@vduggen`.
 
 ## Configurações
 

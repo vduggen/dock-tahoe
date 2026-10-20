@@ -9,7 +9,7 @@
 imports.gi.versions.GdkPixbuf = "2.0";
 const { Gio, GLib, GdkPixbuf } = imports.gi;
 
-const UUID = "tahoe-dock@vduggen";
+const UUID = "dock-tahoe@vduggen";
 
 const [name, monitorArg] = ARGV;
 if (!name || !/^[\w.-]+$/.test(name)) {

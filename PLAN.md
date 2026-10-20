@@ -57,7 +57,7 @@ Capacidades confirmadas nesta máquina:
 ## Arquitetura do novo projeto
 
 ```
-dock-tahoe-cinnamon/
+dock-tahoe/
 ├── metadata.json
 ├── settings-schema.json        # DockSettings (§9)
 ├── stylesheet.css              # só aparência; medidas vêm dos tokens
@@ -88,7 +88,7 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 ### Etapa 0 — Fundação ✅
 
 - `metadata.json`, `extension.js` mínimo, `scripts/check.sh` e `install.sh`
-  com outro UUID (`tahoe-dock@vduggen`), para conviver com o protótipo.
+  com outro UUID (`dock-tahoe@vduggen`), para conviver com o protótipo.
 - `lib/tokens.js` com os tokens da §2 e um fator de escala do monitor.
 - Teste: habilitar e desabilitar 20 vezes sem erro no `~/.xsession-errors`.
 
