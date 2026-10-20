@@ -1,6 +1,7 @@
 // Dock Tahoe — entry points called by Cinnamon's extension system.
 
 const Cinnamon = imports.gi.Cinnamon;
+const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const St = imports.gi.St;
 const Main = imports.ui.main;
@@ -11,6 +12,7 @@ const { DockSettings } = require("./lib/settings.js");
 const { DockView } = require("./lib/dockView.js");
 const { LauncherEntry } = require("./lib/launcherEntry.js");
 const { Trash } = require("./lib/trash.js");
+const Bookmarks = require("./lib/bookmarks.js");
 const Grouping = require("./lib/grouping.js");
 const Layout = require("./lib/layout.js");
 
@@ -237,6 +239,35 @@ class DockController {
             if (window.metaWindow)
                 window.metaWindow.delete(time);
         });
+    }
+
+    // For the default file manager: its home folder and the GTK bookmarks
+    // (its sidebar favorites), as [{ uri, name }]; null for other apps.
+    folderShortcuts(entry) {
+        const manager = Gio.AppInfo.get_default_for_type("inode/directory", false);
+        if (!manager || !entry.desktopFileId || manager.get_id() !== entry.desktopFileId)
+            return null;
+        const shortcuts = [{ uri: Gio.File.new_for_path(GLib.get_home_dir()).get_uri(), name: "Pasta pessoal" }];
+        try {
+            const file = Gio.File.new_for_path(GLib.build_filenamev([GLib.get_user_config_dir(), "gtk-3.0", "bookmarks"]));
+            const [, contents] = file.load_contents(null);
+            return shortcuts.concat(Bookmarks.parse(new TextDecoder().decode(contents)));
+        } catch (e) {
+            // No bookmarks file yet.
+            return shortcuts;
+        }
+    }
+
+    openFolder(entry, uri, monitorIndex) {
+        const info = entry.info || (entry.app && entry.app.get_app_info());
+        if (!info)
+            return;
+        this._expectWindow(entry, monitorIndex);
+        try {
+            info.launch_uris([uri], global.create_app_launch_context());
+        } catch (e) {
+            global.logError(e, "Dock Tahoe: falha ao abrir " + uri);
+        }
     }
 
     _launch(entry, monitorIndex) {
