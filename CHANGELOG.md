@@ -14,6 +14,8 @@ Anote as mudanças em **Não publicado** conforme forem entrando;
 
 ## [Não publicado]
 
+## [0.1.0] - 2026-10-20
+
 ### Adicionado
 
 - Dock flutuante para o Cinnamon 6.6 no estilo do macOS Tahoe, um por
