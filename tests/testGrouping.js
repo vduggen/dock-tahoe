@@ -21,6 +21,13 @@ function keys(items) {
 }
 
 var tests = {
+    "a reorder keeps saved ids the dock does not show"(assert) {
+        const saved = ["a.desktop", "gone.desktop", "b.desktop", "c.desktop"];
+        assert.equal(Grouping.reorderPinned(saved, ["c.desktop", "a.desktop", "b.desktop"]).join(),
+            "c.desktop,gone.desktop,a.desktop,b.desktop");
+        assert.equal(Grouping.reorderPinned(saved, ["a.desktop", "b.desktop", "c.desktop"]).join(), saved.join(), "unchanged");
+    },
+
     "an unpinned web app keeps its own item beside the pinned browser"(assert) {
         const pinned = [{ desktopId: "google-chrome.desktop", wmClasses: ["google-chrome"] }];
         const items = Grouping.group(pinned, [

@@ -49,6 +49,14 @@ function checkIntegrity(assert, placed, monitor, label) {
 }
 
 var tests = {
+    "a dragged icon moves only past a neighbour's center"(assert) {
+        const others = [100, 300];
+        assert.equal(Layout.dropIndex(others, 50), 0);
+        assert.equal(Layout.dropIndex(others, 250), 1, "between stays put");
+        assert.equal(Layout.dropIndex(others, 310), 2, "past the last");
+        assert.equal(Layout.dropIndex([], 10), 0, "alone");
+    },
+
     "rest dock is centered with token spacing"(assert) {
         const tokens = Tokens.resolve();
         const rest = Layout.computeRest(KINDS, tokens, MONITOR, "bottom");

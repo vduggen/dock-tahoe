@@ -233,6 +233,12 @@ class DockController {
         this.tracker.reloadPinned();
     }
 
+    // shown: the pinned desktop ids in their new dock order.
+    reorderPinned(shown) {
+        this.settings.setPinnedApps(Grouping.reorderPinned(this.settings.pinnedApps, shown));
+        this.tracker.reloadPinned();
+    }
+
     // This monitor's windows, the ones its menu lists.
     closeWindows(entry) {
         const time = global.get_current_time();
