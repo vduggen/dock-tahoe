@@ -1,4 +1,4 @@
-# Validação do Dock Tahoe
+# Validação do Tahoe Dock
 
 Roteiro da etapa 7 (`PLAN.md`): os 18 cenários obrigatórios e os critérios
 internos de aceite da `SPEC.md` §10. Cada rodada copia as tabelas de
@@ -31,7 +31,7 @@ captura do Cinnamon e uma do Tahoe só sejam comparadas quando baterem.
 ## Preparação
 
 1. `./scripts/check.sh` passa.
-2. A extensão está ativa e o protótipo `macos-dock@unimestre.local`, não.
+2. A extensão está ativa e nenhum outro dock ocupa a mesma borda da tela.
 3. Para capturas: `cjs scripts/capture.js <nome> [monitor]` tira a tela com
    `gnome-screenshot`, recorta em volta do Dock (com folga para ampliação e
    quique) e grava `captures/<data>-<nome>.png` e `.json` com o ambiente da

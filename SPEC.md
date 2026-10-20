@@ -1,4 +1,4 @@
-# Dock Tahoe para Linux Mint Cinnamon
+# Tahoe Dock para Linux Mint Cinnamon
 **Especificação técnica de design e comportamento — v0.1**
 
 **Referência:** macOS Tahoe 26  

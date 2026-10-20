@@ -2,7 +2,7 @@
 set -euo pipefail
 
 project_dir="$(cd -- "$(dirname -- "$0")/.." && pwd)"
-uuid="tahoe-dock@unimestre.local"
+uuid="tahoe-dock@vduggen"
 extensions_dir="${XDG_DATA_HOME:-$HOME/.local/share}/cinnamon/extensions"
 target="$extensions_dir/$uuid"
 

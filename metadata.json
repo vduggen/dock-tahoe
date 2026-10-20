@@ -1,7 +1,8 @@
 {
-  "uuid": "tahoe-dock@unimestre.local",
-  "name": "Dock Tahoe",
-  "description": "Dock flutuante inspirado no macOS Tahoe 26, para Cinnamon",
+  "uuid": "tahoe-dock@vduggen",
+  "name": "Tahoe Dock",
+  "description": "Dock no estilo do macOS Tahoe para o Cinnamon: ampliação, pilhas de pastas, badges e vidro",
   "version": "0.1.0",
-  "cinnamon-version": ["6.6"]
+  "cinnamon-version": ["6.6"],
+  "url": "https://github.com/vduggen/tahoe-dock"
 }

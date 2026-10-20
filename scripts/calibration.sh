@@ -8,7 +8,7 @@ case "${1:-}" in
     off) value=false ;;
     *) printf 'usage: %s on|off\n' "$0" >&2; exit 2 ;;
 esac
-uuid="tahoe-dock@unimestre.local"
+uuid="tahoe-dock@vduggen"
 config="${XDG_CONFIG_HOME:-$HOME/.config}/cinnamon/spices/$uuid/$uuid.json"
 [[ -f "$config" ]] || { printf 'no settings at %s: enable the extension first\n' "$config" >&2; exit 1; }
 python3 - "$config" "$value" <<'PY'

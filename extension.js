@@ -1,4 +1,4 @@
-// Dock Tahoe — entry points called by Cinnamon's extension system.
+// Tahoe Dock — entry points called by Cinnamon's extension system.
 
 const Cinnamon = imports.gi.Cinnamon;
 const Gio = imports.gi.Gio;
@@ -331,7 +331,7 @@ class DockController {
         try {
             info.launch_uris([uri], global.create_app_launch_context());
         } catch (e) {
-            global.logError(e, "Dock Tahoe: falha ao abrir " + uri);
+            global.logError(e, "Tahoe Dock: falha ao abrir " + uri);
         }
     }
 
@@ -347,7 +347,7 @@ class DockController {
             else if (entry.info)
                 entry.info.launch([], global.create_app_launch_context());
         } catch (e) {
-            global.logError(e, "Dock Tahoe: falha ao abrir " + entry.name);
+            global.logError(e, "Tahoe Dock: falha ao abrir " + entry.name);
         }
     }
 
@@ -559,7 +559,7 @@ function init(metadata) {
 function enable() {
     _controller = new DockController(_metadata);
     _controller.enable();
-    global.log("Dock Tahoe v" + _metadata.version + " ativo");
+    global.log("Tahoe Dock v" + _metadata.version + " ativo");
 }
 
 function disable() {
@@ -567,5 +567,5 @@ function disable() {
         _controller.disable();
         _controller = null;
     }
-    global.log("Dock Tahoe v" + _metadata.version + " desativado");
+    global.log("Tahoe Dock v" + _metadata.version + " desativado");
 }

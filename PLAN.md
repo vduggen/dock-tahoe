@@ -1,4 +1,4 @@
-# Plano de implementação — Dock Tahoe para Cinnamon
+# Plano de implementação — Tahoe Dock para Cinnamon
 
 Plano de lacunas entre a [`SPEC.md`](SPEC.md) (v0.1) e o protótipo existente
 em `../dock-macos-cinnamon` (v0.2.1). O protótipo não será alterado: este
@@ -88,7 +88,7 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 ### Etapa 0 — Fundação ✅
 
 - `metadata.json`, `extension.js` mínimo, `scripts/check.sh` e `install.sh`
-  com outro UUID (`tahoe-dock@unimestre.local`), para conviver com o protótipo.
+  com outro UUID (`tahoe-dock@vduggen`), para conviver com o protótipo.
 - `lib/tokens.js` com os tokens da §2 e um fator de escala do monitor.
 - Teste: habilitar e desabilitar 20 vezes sem erro no `~/.xsession-errors`.
 
