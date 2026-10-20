@@ -102,7 +102,7 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 - `tests/`: invariantes (sem sobreposição, dentro do monitor, base alinhada,
   simetria no centro, primeiro e último ícone), mais os cenários 1–4 da §10.
 
-### Etapa 2 — P0: dados e estados
+### Etapa 2 — P0: dados e estados ✅
 
 - `state.js`: bitflags de app (`pinned`, `running`, `focused`, `minimized`,
   `attention`, `launching`…) e o estado global do dock.
@@ -168,6 +168,14 @@ spec e precisam ser comparadas com gravações do Tahoe:
   largura do separador (1 px) não escala.
 - **Ampliação sem espaço:** quando não cabe, o excesso é reduzido
   uniformemente até caber na tela.
+
+## Notas de comportamento do Muffin
+
+- `demands-attention` só é aceito para janelas que não estão visíveis (por
+  exemplo, minimizadas ou cobertas); para janelas visíveis o Muffin ignora o
+  pedido. O estado `ATTENTION` segue o que o Muffin decide.
+- `wmctrl -b add,hidden` não minimiza no Muffin; para testes manuais use
+  `Meta.Window.minimize()` via `org.Cinnamon.Eval`.
 
 ## Riscos e decisões em aberto
 
