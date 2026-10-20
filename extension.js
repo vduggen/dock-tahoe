@@ -1,12 +1,16 @@
 // Dock Tahoe — entry points called by Cinnamon's extension system.
 
+const GLib = imports.gi.GLib;
 const St = imports.gi.St;
 const Main = imports.ui.main;
+const { PanelLoc } = imports.ui.panel;
 
 const { AppTracker } = require("./lib/appTracker.js");
 const { DockSettings } = require("./lib/settings.js");
 const { DockView } = require("./lib/dockView.js");
 const Grouping = require("./lib/grouping.js");
+
+const PANEL_KEYS = ["panels-enabled", "panels-height", "panels-autohide"];
 
 let _metadata = null;
 let _controller = null;
@@ -16,6 +20,7 @@ class DockController {
         this.views = [];
         this._signals = [];
         this._snapshot = { items: [] };
+        this._rebuildId = 0;
         this.settings = new DockSettings(metadata.uuid, () => this.tracker.reloadPinned());
         this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
             this._snapshot = snapshot;
@@ -27,11 +32,17 @@ class DockController {
     enable() {
         this._connect(Main.layoutManager, "monitors-changed", () => this._rebuildViews());
         this._connect(this._themeContext, "notify::scale-factor", () => this._rebuildViews());
+        PANEL_KEYS.forEach(key =>
+            this._connect(global.settings, "changed::" + key, () => this._queueRebuild()));
         this._rebuildViews();
         this.tracker.enable();
     }
 
     disable() {
+        if (this._rebuildId) {
+            GLib.source_remove(this._rebuildId);
+            this._rebuildId = 0;
+        }
         this.tracker.disable();
         this._signals.forEach(([object, id]) => object.disconnect(id));
         this._signals = [];
@@ -44,11 +55,37 @@ class DockController {
         this._signals.push([object, object.connect(signal, callback)]);
     }
 
+    // Panels resize after their settings change; wait for that to settle.
+    _queueRebuild() {
+        if (this._rebuildId)
+            return;
+        this._rebuildId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            this._rebuildId = 0;
+            this._rebuildViews();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
     _rebuildViews() {
         this.views.forEach(view => view.destroy());
         const scale = this._themeContext.scale_factor;
-        this.views = Main.layoutManager.monitors.map(monitor => new DockView(monitor, "bottom", scale));
+        const position = "bottom";
+        this.views = Main.layoutManager.monitors.map(monitor =>
+            new DockView(monitor, position, scale, this._panelInset(monitor.index, position)));
         this._updateViews();
+    }
+
+    // Thickness of the always-visible Cinnamon panels on the dock's edge, so
+    // the dock floats above them instead of covering them.
+    _panelInset(monitorIndex, position) {
+        if (!Main.panelManager)
+            return 0;
+        const location = PanelLoc[position];
+        return Main.panelManager.getPanelsInMonitor(monitorIndex)
+            .filter(panel => panel.panelPosition === location && !panel.isHideable())
+            .reduce((sum, panel) => sum + (position === "bottom"
+                ? panel.actor.get_height()
+                : panel.actor.get_width()), 0);
     }
 
     // Each monitor shows the pinned apps plus the unpinned apps with windows
