@@ -107,7 +107,14 @@
 
 .tahoe-preview-card {
     padding: 6px;
-    border-radius: 8px;
+    border: 2px solid transparent;
+    border-radius: 9px;
+}
+
+/* The focused window, in the dock's focus color. */
+.tahoe-preview-card.active {
+    border-color: rgb(10, 132, 255);
+    background-color: rgba(10, 132, 255, 0.16);
 }
 
 .tahoe-preview-card:hover,
