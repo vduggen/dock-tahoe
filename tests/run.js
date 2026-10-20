@@ -2,13 +2,18 @@
 //   cd <project> && cjs tests/run.js
 imports.searchPath.unshift(".");
 
-const SUITES = ["testTokens"];
+const SUITES = ["testTokens", "testMagnification"];
 
 const assert = {
     equal(actual, expected, label) {
         if (actual !== expected)
             throw new Error((label ? label + ": " : "") +
                 "expected " + expected + ", got " + actual);
+    },
+    near(actual, expected, epsilon, label) {
+        if (!(Math.abs(actual - expected) <= epsilon))
+            throw new Error((label ? label + ": " : "") +
+                "expected " + expected + " ± " + epsilon + ", got " + actual);
     },
     ok(value, label) {
         if (!value)
