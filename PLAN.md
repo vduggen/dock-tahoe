@@ -85,14 +85,14 @@ sobreposição, sem ícone fora da tela) são testadas sem Cinnamon.
 
 Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passando.
 
-### Etapa 0 — Fundação
+### Etapa 0 — Fundação ✅
 
 - `metadata.json`, `extension.js` mínimo, `scripts/check.sh` e `install.sh`
   com outro UUID (`tahoe-dock@unimestre.local`), para conviver com o protótipo.
 - `lib/tokens.js` com os tokens da §2 e um fator de escala do monitor.
 - Teste: habilitar e desabilitar 20 vezes sem erro no `~/.xsession-errors`.
 
-### Etapa 1 — P0: geometria pura
+### Etapa 1 — P0: geometria pura ✅
 
 - `layout.js`: largura total, centralização, separadores, posições
   inferior/esquerda/direita, encolhimento para caber na área do monitor.
@@ -152,6 +152,22 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 - Roteiro com os 18 cenários da §10 e a planilha de critérios.
 - Capturas do Cinnamon com `gnome-screenshot`/`import`, comparadas por
   sobreposição com as capturas do Tahoe, quando estiverem disponíveis.
+
+## Hipóteses de geometria a calibrar
+
+Decisões da Etapa 1 (`lib/layout.js`, `lib/magnification.js`) que não vêm da
+spec e precisam ser comparadas com gravações do Tahoe:
+
+- **Âncora da ampliação:** o ponto sob o cursor fica fixo e os vizinhos são
+  empurrados para os dois lados; perto das bordas da tela, o dock inteiro é
+  deslocado para não sair dela.
+- **Cápsula:** cresce no eixo principal junto com os ícones, mas mantém a
+  altura de repouso; os ícones ampliados sobem além dela.
+- **Alcance:** token `magnification.sigma` = 60, cerca de um slot de ícone.
+- **Encolhimento:** padding, gap, ícones e separadores escalam juntos; a
+  largura do separador (1 px) não escala.
+- **Ampliação sem espaço:** quando não cabe, o excesso é reduzido
+  uniformemente até caber na tela.
 
 ## Riscos e decisões em aberto
 
