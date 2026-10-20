@@ -26,7 +26,8 @@ class DockController {
         this.settings = new DockSettings(metadata.uuid, {
             pinnedApps: () => this.tracker.reloadPinned(),
             position: () => this._rebuildViews(),
-            focusHotkey: () => this._bindHotkey()
+            focusHotkey: () => this._bindHotkey(),
+            autohide: () => this._rebuildViews()
         });
         this.tracker = new AppTracker(() => this.settings.pinnedApps, snapshot => {
             this._snapshot = snapshot;
@@ -91,7 +92,8 @@ class DockController {
             ? this.settings.position
             : "bottom";
         this.views = Main.layoutManager.monitors.map(monitor =>
-            new DockView(monitor, position, scale, this._panelInset(monitor.index, position), this));
+            new DockView(monitor, position, scale, this._panelInset(monitor.index, position),
+                this.settings.autohide, this));
         this._updateViews();
     }
 

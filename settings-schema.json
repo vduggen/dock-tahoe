@@ -20,6 +20,11 @@
       "Direita": "right"
     }
   },
+  "autohide": {
+    "type": "switch",
+    "description": "Ocultar automaticamente",
+    "default": false
+  },
   "focus-hotkey": {
     "type": "keybinding",
     "description": "Focar o Dock pelo teclado",
