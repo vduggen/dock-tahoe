@@ -1,0 +1,13 @@
+{
+  "pinned-apps": {
+    "type": "generic",
+    "default": [
+      "nemo.desktop",
+      "com.mitchellh.ghostty.desktop",
+      "heidisql.desktop",
+      "chrome-cinhimbnkkaeohfgghhklpknlkffjgod-Default.desktop",
+      "chrome-lcmninomimaabkahifgablgmjeldgkhm-Profile_3.desktop",
+      "chrome-pommaclcbfghclhalboakcipcmmndhcj-Profile_3.desktop"
+    ]
+  }
+}
