@@ -224,7 +224,10 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
 
 ### Etapa 7 — Validação
 
-- Roteiro com os 18 cenários da §10 e a planilha de critérios.
+- ✅ Roteiro com os 18 cenários da §10 e a planilha de critérios:
+  [`docs/VALIDACAO.md`](docs/VALIDACAO.md), com o ambiente de cada rodada
+  (os campos das capturas de referência), passos, resultado esperado, o
+  que os testes já cobrem e as tabelas a preencher.
 - Capturas do Cinnamon com `gnome-screenshot`/`import`, comparadas por
   sobreposição com as capturas do Tahoe, quando estiverem disponíveis.
 
