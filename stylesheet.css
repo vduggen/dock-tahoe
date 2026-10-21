@@ -45,6 +45,7 @@
 .menu.tahoe-menu .popup-menu-content {
     padding: 5px;
     margin: 0;
+    border: 0;
     border-radius: 0;
     background-color: transparent;
     box-shadow: none;

@@ -35,6 +35,8 @@ Anote as mudanças em **Não publicado** conforme forem entrando;
   agarrado, e o `captured-event` do palco e os atores não reativos ficavam
   sem nada, então Esc e clique fora não fechavam. Agora os eventos chegam
   pelo próprio ator, que fica reativo durante o grab.
+- GNOME: o menu de contexto mostrava uma moldura retangular em volta do
+  balão, a borda que o tema (Yaru/Adwaita) põe em `.popup-menu-content`.
 
 ### Alterado
 
