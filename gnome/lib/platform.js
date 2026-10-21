@@ -213,6 +213,17 @@ export function unbindHotkey() {
     Main.wm.removeKeybinding(HOTKEY_KEY);
 }
 
+// The overview lays its workspaces out to the primary monitor's edges, and
+// the dock stays on top of it; padding its controls on the dock's side keeps
+// the windows clear of the dock. thickness: the dock's band in stage px, 0
+// to give the room back.
+export function reserveOverview(monitorIndex, position, thickness, scaleFactor) {
+    const controls = Main.overview._overview?._controls;
+    if (!controls || monitorIndex !== Main.layoutManager.primaryIndex)
+        return;
+    controls.set_style(thickness ? `padding-${position}: ${thickness / scaleFactor}px;` : null);
+}
+
 // GNOME Shell's top bar is never on the dock's edge.
 export function watchPanels(connect, callback) {
 }

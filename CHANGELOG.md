@@ -37,6 +37,9 @@ Anote as mudanças em **Não publicado** conforme forem entrando;
   pelo próprio ator, que fica reativo durante o grab.
 - GNOME: o menu de contexto mostrava uma moldura retangular em volta do
   balão, a borda que o tema (Yaru/Adwaita) põe em `.popup-menu-content`.
+- GNOME: no Overview as janelas iam até a borda do monitor e ficavam por
+  baixo do Dock. O Overview agora reserva a faixa do Dock no monitor
+  principal.
 
 ### Alterado
 
