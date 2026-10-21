@@ -72,6 +72,17 @@
     "tooltip": "Desfoca o papel de parede atrás do Dock. Quando há uma janela atrás dele, usa o vidro simples.",
     "default": false
   },
+  "glass-quality": {
+    "type": "combobox",
+    "description": "Qualidade do desfoque",
+    "tooltip": "Econômico desfoca só o papel de parede e é leve para computadores mais fracos. Alta qualidade também desfoca as janelas atrás do Dock e suaviza mais, com mais uso da GPU.",
+    "options": {
+      "Econômico": "fast",
+      "Alta qualidade": "high"
+    },
+    "default": "fast",
+    "dependency": "glass-blur"
+  },
   "autohide": {
     "type": "switch",
     "description": "Ocultar automaticamente",

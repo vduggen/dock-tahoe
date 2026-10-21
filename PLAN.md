@@ -207,6 +207,13 @@ Cada etapa termina com a extensão habilitável e com `scripts/check.sh` passand
   com o fundo e reflexo especular nas bordas voltadas para cima. Hover a
   59–60 FPS. Sem `glass-blur`, fica o vidro simples do CSS (§3,
   "aparência simplificada").
+- ✅ Qualidade do desfoque (`glass-quality`, só com `glass-blur`):
+  `fast` é o caminho acima, para GPUs fracas; `high` clona cada janela da
+  área de trabalho atual que cruza a faixa (`Clutter.Clone` do
+  `MetaWindowActor`, que pinta, ao contrário do `window_group`), na ordem de
+  empilhamento e presa à posição da janela por `BindConstraint`, e usa
+  2 × 33 amostras. O vidro não some atrás de janelas, mas a faixa é
+  redesenhada sempre que uma dessas janelas é. Testado no GNOME 46 aninhado.
 - ✅ Aparência dos ícones (`icon-appearance`, `lib/iconAppearance.js`):
   padrão, clara, escura, tonalizada (cor em `icon-tint`) e transparente,
   por um `Clutter.ShaderEffect` no ícone original, sem máscara. Escura

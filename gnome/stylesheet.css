@@ -1,0 +1,33 @@
+/* GNOME Shell only, appended to the shared stylesheet by
+ * scripts/build-gnome.js, where .menu.tahoe-menu becomes
+ * .popup-menu.tahoe-menu. The bubble (lib/bubbleActor.js) draws the menu,
+ * so the box pointer draws nothing and leaves no room for its arrow. */
+.popup-menu.tahoe-menu {
+    -arrow-background-color: transparent;
+    -arrow-border-color: transparent;
+    -arrow-border-width: 0;
+    -arrow-border-radius: 0;
+    -arrow-base: 0;
+    -arrow-rise: 0;
+    -boxpointer-gap: 0;
+    -arrow-box-shadow: none;
+}
+
+.popup-menu.tahoe-menu .popup-menu-item:focus,
+.popup-menu.tahoe-menu .popup-menu-item.selected {
+    background-color: rgb(10, 132, 255);
+    color: white;
+}
+
+.popup-menu.tahoe-menu .popup-menu-ornament {
+    width: 1.2em;
+}
+
+.popup-menu.tahoe-menu .popup-separator-menu-item {
+    padding: 0 10px;
+}
+
+.popup-menu.tahoe-menu .popup-separator-menu-item-separator {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.16);
+}

@@ -1,0 +1,8 @@
+{
+  "uuid": "dock-tahoe@vduggen",
+  "name": "Tahoe Dock",
+  "description": "Dock no estilo do macOS Tahoe para o GNOME Shell: ampliação, pilhas de pastas, badges e vidro",
+  "shell-version": ["46"],
+  "settings-schema": "org.gnome.shell.extensions.dock-tahoe",
+  "url": "https://github.com/vduggen/dock-tahoe"
+}
