@@ -46,6 +46,23 @@ código atende os dois: o que muda entre eles fica em `lib/platform.js`
 
 ## Instalação
 
+### Atualização pelas configurações
+
+Nas configurações do Tahoe Dock, clique em **Atualizar Tahoe Dock pelo GitHub**
+e confirme em **Atualizar agora**. O atualizador busca a branch `main` do
+repositório oficial e preserva suas configurações. Requer Git, Python 3 e
+PyGObject com GTK 3; no GNOME, também Node.js para reconstruir o pacote.
+
+Por segurança, a atualização é recusada se houver arquivos modificados ou
+não rastreados, outra branch ativa ou histórico divergente. Não são usados
+`reset`, descarte de arquivos ou elevação de privilégios. Depois de atualizar,
+encerre a sessão e entre novamente para carregar os novos módulos.
+
+O botão só existe nas versões que já incluem o atualizador: instalações
+antigas precisam ser atualizadas manualmente uma primeira vez. A instalação
+deve continuar vinculada ao checkout Git usado pelo instalador; o atualizador
+não troca links para outros projetos ou pastas automaticamente.
+
 Enquanto não está no [Cinnamon Spices](https://cinnamon-spices.linuxmint.com/extensions),
 instale a partir do código:
 

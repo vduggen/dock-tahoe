@@ -31,7 +31,7 @@ const KEY_TYPES = {
 // The Cinnamon default is the author's own dock; GNOME starts from the
 // shell's favorites (gnome/lib/settings.js).
 const KEY_DEFAULTS = { "pinned-apps": [], "stack-options": "{}" };
-const SKIPPED_TYPES = ["section", "header", "separator", "label"];
+const SKIPPED_TYPES = ["section", "header", "separator", "label", "button"];
 
 function fail(message) {
     console.error("build-gnome: " + message);
@@ -116,6 +116,9 @@ function main() {
     fs.rmSync(out, { recursive: true, force: true });
     fs.mkdirSync(path.join(out, "lib"), { recursive: true });
     fs.mkdirSync(path.join(out, "schemas"));
+    fs.mkdirSync(path.join(out, "scripts"));
+    fs.copyFileSync(path.join(ROOT, "scripts", "update.py"), path.join(out, "scripts", "update.py"));
+    fs.writeFileSync(path.join(out, "update-source.json"), JSON.stringify({ source: ROOT }) + "\n");
 
     const replaced = fs.readdirSync(path.join(GNOME, "lib"));
     fs.readdirSync(path.join(ROOT, "lib")).filter(name => name.endsWith(".js")).forEach(name => {

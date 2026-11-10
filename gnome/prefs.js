@@ -35,6 +35,21 @@ export default class TahoeDockPreferences extends ExtensionPreferences {
             }
             if (HIDDEN_TYPES.indexOf(spec.type) >= 0)
                 return;
+            if (spec.type === "button") {
+                const row = new Adw.ActionRow({ title: spec.description });
+                const button = new Gtk.Button({ label: "Atualizar…", valign: Gtk.Align.CENTER });
+                button.connect("clicked", () => {
+                    try {
+                        Gio.Subprocess.new(["python3", this.dir.get_child("scripts/update.py").get_path(), "gnome"],
+                            Gio.SubprocessFlags.NONE);
+                    } catch (error) {
+                        window.add_toast(new Adw.Toast({ title: "Falha ao abrir atualizador: " + error.message }));
+                    }
+                });
+                row.add_suffix(button);
+                group.add(row);
+                return;
+            }
             if (spec.type === "list") {
                 // A list is a group of its own, after the current one.
                 const list = folderGroup(window, settings, key, spec);

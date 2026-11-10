@@ -3,6 +3,8 @@
 
 const { DockController } = require("./lib/controller.js");
 const { DockSettings } = require("./lib/settings.js");
+const GLib = imports.gi.GLib;
+const Main = imports.ui.main;
 
 let _metadata = null;
 let _controller = null;
@@ -15,6 +17,16 @@ function enable() {
     _controller = new DockController(callbacks => new DockSettings(_metadata.uuid, callbacks));
     _controller.enable();
     global.log("Tahoe Dock v" + _metadata.version + " ativo");
+    return { updateExtension };
+}
+
+function updateExtension() {
+    try {
+        GLib.spawn_async(null, ["python3", _metadata.path + "/scripts/update.py", "cinnamon"],
+            null, GLib.SpawnFlags.SEARCH_PATH, null);
+    } catch (error) {
+        Main.notifyError("Tahoe Dock", "Não foi possível abrir o atualizador: " + error.message);
+    }
 }
 
 function disable() {

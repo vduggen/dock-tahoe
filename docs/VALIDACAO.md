@@ -155,6 +155,8 @@ conferido na tela.
   Dock" pelo menu; arrastar um recente para depois dos fixados.
 - **Esperado:** entrada e saída animadas em ~220 ms (`reorderMs`), sem
   saltos dos vizinhos; a lista salva em `pinned-apps` acompanha.
+- **Flatpak:** abrir o Obsidian, escolher "Manter no Dock", fechá-lo e
+  reabri-lo pelo ícone; deve permanecer um único ícone, com a janela agrupada.
 
 ### 13. Menu contextual
 
@@ -164,6 +166,9 @@ conferido na tela.
   "Nova janela"/"Abrir", "Manter no Dock"/"Remover do Dock", "Fechar"; na
   lixeira, "Esvaziar Lixeira" só habilitado quando cheia e pedindo
   confirmação; o tooltip some enquanto o menu está aberto.
+- **Título longo:** abrir uma janela com título extenso e conferir, junto às
+  bordas de cada monitor e nas três posições do Dock, que o menu permanece
+  visível e o título termina em reticências.
 
 ### 14. Abertura de pasta
 

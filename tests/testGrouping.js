@@ -21,6 +21,17 @@ function keys(items) {
 }
 
 var tests = {
+    "window-backed Flatpak resolves a unique reverse-DNS launcher"(assert) {
+        const launcher = { desktopId: "md.obsidian.Obsidian.desktop", wmClass: "md.obsidian.Obsidian" };
+        const window = win({ appId: "obsidian", wmClasses: ["obsidian", "obsidian"], windowBacked: true });
+        const items = Grouping.group([], [window], [], [launcher]);
+        assert.equal(items[0].desktopId, "md.obsidian.obsidian");
+        const pinned = Grouping.group([{ desktopId: launcher.desktopId, wmClasses: [launcher.wmClass] }], [window], [], [launcher]);
+        assert.equal(pinned.length, 1);
+        assert.equal(pinned[0].windows.length, 1);
+        const ambiguous = Grouping.group([], [window], [], [launcher, { desktopId: "other.obsidian.desktop", wmClass: "other.obsidian" }]);
+        assert.equal(ambiguous[0].desktopId, "obsidian");
+    },
     "recent apps: closed ones first, without running or pinned ones, at most max"(assert) {
         const recent = (saved, before, after, pinned) =>
             Grouping.recentApps(saved, before, after, pinned || [], 3).join();

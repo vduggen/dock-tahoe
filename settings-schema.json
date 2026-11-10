@@ -1,4 +1,10 @@
 {
+  "update-extension": {
+    "type": "button",
+    "description": "Atualizar Tahoe Dock pelo GitHub",
+    "callback": "updateExtension",
+    "tooltip": "Busca a versão mais recente sem sobrescrever alterações locais. Requer Git, Python 3 e PyGObject/GTK 3."
+  },
   "pinned-apps": {
     "type": "generic",
     "default": [
