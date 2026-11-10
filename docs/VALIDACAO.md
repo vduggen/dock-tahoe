@@ -170,6 +170,17 @@ conferido na tela.
   bordas de cada monitor e nas três posições do Dock, que o menu permanece
   visível e o título termina em reticências.
 
+### Expo do Cinnamon: mover janelas entre espaços
+
+- **Passos:** abrir `Ctrl+Alt+↑`, arrastar uma miniatura de janela para outro
+  espaço e sair da visão. Repetir com ocultação automática ligada/desligada,
+  em vários monitores e após recarregar a extensão.
+- **Esperado:** o Dock fica oculto na visão de espaços e não intercepta os
+  destinos do arraste. A janela muda de espaço; ao sair, o Dock reaparece
+  respeitando sua configuração de ocultação automática.
+- **Automatizado:** `testDockOverview.js` verifica ocultação do contêiner e
+  do gatilho de borda, liberação das interfaces modais e restauração.
+
 ### 14. Abertura de pasta
 
 - **Passos:** clicar em Downloads e numa pasta adicionada; trocar a

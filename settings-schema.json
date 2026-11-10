@@ -1,4 +1,10 @@
 {
+  "reload-extension": {
+    "type": "button",
+    "description": "Recarregar Tahoe Dock (Cinnamon)",
+    "callback": "reloadExtension",
+    "tooltip": "Aplica alterações locais sem encerrar a sessão. Não baixa atualizações."
+  },
   "update-extension": {
     "type": "button",
     "description": "Atualizar Tahoe Dock pelo GitHub",

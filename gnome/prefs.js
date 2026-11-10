@@ -36,6 +36,8 @@ export default class TahoeDockPreferences extends ExtensionPreferences {
             if (HIDDEN_TYPES.indexOf(spec.type) >= 0)
                 return;
             if (spec.type === "button") {
+                if (key === "reload-extension")
+                    return;
                 const row = new Adw.ActionRow({ title: spec.description });
                 const button = new Gtk.Button({ label: "Atualizar…", valign: Gtk.Align.CENTER });
                 button.connect("clicked", () => {

@@ -4,6 +4,7 @@ import pathlib
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location("updater", pathlib.Path(__file__).parents[1] / "scripts/update.py")
 updater = importlib.util.module_from_spec(spec)
@@ -34,8 +35,30 @@ class UpdaterTests(unittest.TestCase):
 
     def test_fast_forward(self):
         self.commit(self.remote, "updated")
-        updater.update(self.local, "cinnamon", str(self.remote))
+        with patch.object(updater, "reload_cinnamon", return_value="recarregado") as reload:
+            message = updater.update(self.local, "cinnamon", str(self.remote))
+            reload.assert_called_once_with(self.local)
+            self.assertIn("recarregado", message)
         self.assertEqual((self.local / "file").read_text(), "updated")
+
+    def test_no_changes_does_not_reload(self):
+        with patch.object(updater, "reload_cinnamon") as reload:
+            message = updater.update(self.local, "cinnamon", str(self.remote))
+            reload.assert_not_called()
+            self.assertIn("já está atualizado", message)
+
+    def test_reload_failure_keeps_update(self):
+        self.commit(self.remote, "updated")
+        with patch.object(updater, "reload_cinnamon", side_effect=OSError("D-Bus")):
+            message = updater.update(self.local, "cinnamon", str(self.remote))
+            self.assertIn("recarga falhou", message)
+        self.assertEqual((self.local / "file").read_text(), "updated")
+
+    def test_reload_targets_only_the_extension(self):
+        with patch.object(updater, "run") as run:
+            updater.reload_cinnamon(self.local)
+            self.assertEqual(run.call_args.args[-3:],
+                             ("org.Cinnamon.ReloadXlet", "dock-tahoe@vduggen", "EXTENSION"))
 
     def test_preserves_local_edits(self):
         (self.local / "file").write_text("local")

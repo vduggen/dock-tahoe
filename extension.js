@@ -17,7 +17,16 @@ function enable() {
     _controller = new DockController(callbacks => new DockSettings(_metadata.uuid, callbacks));
     _controller.enable();
     global.log("Tahoe Dock v" + _metadata.version + " ativo");
-    return { updateExtension };
+    return { updateExtension, reloadExtension };
+}
+
+function reloadExtension() {
+    try {
+        GLib.spawn_async(null, ["python3", _metadata.path + "/scripts/update.py", "cinnamon", "--reload"],
+            null, GLib.SpawnFlags.SEARCH_PATH, null);
+    } catch (error) {
+        Main.notifyError("Tahoe Dock", "Não foi possível abrir a recarga: " + error.message);
+    }
 }
 
 function updateExtension() {

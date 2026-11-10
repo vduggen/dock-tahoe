@@ -196,6 +196,14 @@ export function openMenu(menu) {
     menu.open(BoxPointer.PopupAnimation.FADE);
 }
 
+// GNOME keeps its dock available in the overview; Cinnamon's Expo does not.
+export function overviewHidesDock() {
+    return false;
+}
+
+export function watchOverview(connect, changed) {
+}
+
 // Marks a menu item as the chosen one of its group; the others keep the
 // dot's room, so the labels line up.
 export function setDot(item, on) {

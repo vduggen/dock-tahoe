@@ -55,8 +55,13 @@ PyGObject com GTK 3; no GNOME, também Node.js para reconstruir o pacote.
 
 Por segurança, a atualização é recusada se houver arquivos modificados ou
 não rastreados, outra branch ativa ou histórico divergente. Não são usados
-`reset`, descarte de arquivos ou elevação de privilégios. Depois de atualizar,
-encerre a sessão e entre novamente para carregar os novos módulos.
+`reset`, descarte de arquivos ou elevação de privilégios. No Cinnamon, o dock
+é recarregado automaticamente depois de uma atualização. Para aplicar mudanças
+locais sem baixar nada, use **Recarregar Tahoe Dock (Cinnamon)**. Essa recarga
+não fecha aplicativos nem exige sair da sessão. Se não houver novidades, o
+atualizador apenas informa que já está atualizado.
+
+No GNOME Shell, a recarga dos módulos exige entrar novamente na sessão.
 
 O botão só existe nas versões que já incluem o atualizador: instalações
 antigas precisam ser atualizadas manualmente uma primeira vez. A instalação

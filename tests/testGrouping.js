@@ -21,6 +21,18 @@ function keys(items) {
 }
 
 var tests = {
+    "Cinnamon Flatpak ids use the real desktop filename and share pinned windows"(assert) {
+        const appId = "md.obsidian.Obsidian.desktop:flatpak";
+        assert.equal(Grouping.desktopFileId(appId), "md.obsidian.Obsidian.desktop");
+        assert.equal(Grouping.normalizeId(appId), "md.obsidian.obsidian");
+        [appId, "md.obsidian.Obsidian.desktop"].forEach(saved => {
+            const items = Grouping.group([{ desktopId: saved }], [win({
+                appId: appId, wmClasses: ["md.obsidian.Obsidian", "md.obsidian.obsidian"]
+            })]);
+            assert.equal(items.length, 1);
+            assert.equal(items[0].windows.length, 1);
+        });
+    },
     "window-backed Flatpak resolves a unique reverse-DNS launcher"(assert) {
         const launcher = { desktopId: "md.obsidian.Obsidian.desktop", wmClass: "md.obsidian.Obsidian" };
         const window = win({ appId: "obsidian", wmClasses: ["obsidian", "obsidian"], windowBacked: true });
