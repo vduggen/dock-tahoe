@@ -4,6 +4,7 @@ set -euo pipefail
 project_dir="$(cd -- "$(dirname -- "$0")/.." && pwd)"
 PYTHONDONTWRITEBYTECODE=1 python3 "$project_dir/tests/testUpdater.py"
 node "$project_dir/tests/testDockOverview.js"
+node "$project_dir/tests/testDockAutohide.js"
 for file in "$project_dir"/extension.js "$project_dir"/lib/*.js "$project_dir"/tests/*.js "$project_dir"/scripts/*.js; do
     [[ -e "$file" ]] && node --check "$file"
 done
